@@ -58,7 +58,7 @@ Summary:
 
 
 
-    _Z18try_but_dont_catchv:
+    _Z18func_with_catch_blockv:
     .cfi_startproc
     .cfi_personality 0,__gxx_personality_v0
     .cfi_lsda 0,.LLSDA1
