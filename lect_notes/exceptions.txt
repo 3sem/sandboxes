@@ -66,20 +66,29 @@ _Z18func_with_catch_blockv:
 -- линкер использует это для спецификации CFI (call frame information); CFI хранит информацию о фрейме вызова, вот его полная спецификация. Он используется, в основном, для раскручивания стэка.
 -- LDSA (language specific data area) — специальная область для каждого языка, используемая персональной функцией, чтобы знать, какие исключения могут быть обработаны данной функцией.
 
-[...]
+[...] 
 call    _Z5raisev
 jmp .L8
 
 cmpl    $1, %edx
     je  .L5
 
-.LEHB1:
+.LEHB1: # Can't handle exception
     call    _Unwind_Resume
 .LEHE1:
 
-.L5:
+.L5: # Can handle exception
     call    __cxa_begin_catch
     call    __cxa_end_catch
+    
+Тут мы проверяем — можем ли мы обрабатывать это исключение, если нет — вызываем _Unwind_Resume, если можем — вызываем __cxa_begin_catch и __cxa_end_catch, после этого функция должна продолжиться нормально и, таким образом, L8 будет выполнено (L8 прямо под нашим catch-блоком):
+
+.L8:
+    leave
+    .cfi_restore 5
+    .cfi_def_cfa 4, 4
+    ret
+    .cfi_endproc
 
 
 
