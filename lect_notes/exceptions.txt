@@ -45,6 +45,8 @@ Summary:
     -- __cxa_allocate_exception и __cxa_throw "живут" в libstdc++.
     -- __cxa_allocate_exception выделяет память для нового исключения.
     -- __cxa_throw выполняет подготовку и отдает исключение в _Unwind, в набор функций, которые живут в libstdc и производит реальное разворачивание стэка (ABI определяет интерфейс этих функций).
+    
+    
 
 -------------------------------------------------- catch --------------------------------------------
 Отлов исключений требует от программы немного рефлексии (исследования своего собственного кода):
@@ -52,3 +54,11 @@ Summary:
 `__cxa_begin_catch'
 `__cxa_end_catch'
 `__gxx_personality_v0'
+
+
+
+
+    _Z18try_but_dont_catchv:
+    .cfi_startproc
+    .cfi_personality 0,__gxx_personality_v0
+    .cfi_lsda 0,.LLSDA1
