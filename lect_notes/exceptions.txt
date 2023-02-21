@@ -39,4 +39,10 @@ call    __cxa_allocate_exception
     movl    %eax, (%esp)
     call    __cxa_throw
 
+Summary:
+    throw-объявление будет транслировано компилятором в два вызова: __cxa_allocate_exception и __cxa_throw.
+    __cxa_allocate_exception и __cxa_throw "живут" в libstdc++.
+    __cxa_allocate_exception выделяет память для нового исключения.
+    __cxa_throw выполняет подготовку и отдает исключение в _Unwind, в набор функций, которые живут в libstdc и производит реальное разворачивание стэка (ABI определяет интерфейс этих функций).
+
 
