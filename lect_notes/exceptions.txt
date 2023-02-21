@@ -56,9 +56,32 @@ Summary:
 `__gxx_personality_v0'
 
 
+_Z18func_with_catch_blockv:
+          .cfi_startproc
+          .cfi_personality 0,__gxx_personality_v0
+          .cfi_lsda 0,.LLSDA1
+    
+ -- Определение для функции обрезано компилятором. Это что-то новое: ссылка на __gxx_personality_v0 и что-то другое, называемое LSDA. Это выглядит незначительным определением, однако в действительности это очень важно:
+
+-- линкер использует это для спецификации CFI (call frame information); CFI хранит информацию о фрейме вызова, вот его полная спецификация. Он используется, в основном, для раскручивания стэка.
+-- LDSA (language specific data area) — специальная область для каждого языка, используемая персональной функцией, чтобы знать, какие исключения могут быть обработаны данной функцией.
+
+[...]
+call    _Z5raisev
+jmp .L8
+
+cmpl    $1, %edx
+    je  .L5
+
+.LEHB1:
+    call    _Unwind_Resume
+.LEHE1:
+
+.L5:
+    call    __cxa_begin_catch
+    call    __cxa_end_catch
 
 
-    _Z18func_with_catch_blockv:
-    .cfi_startproc
-    .cfi_personality 0,__gxx_personality_v0
-    .cfi_lsda 0,.LLSDA1
+
+
+
