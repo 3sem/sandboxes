@@ -8,12 +8,12 @@ void print() {
 
 template <typename T> 
 void print(const T& t) {
-    cout << "Second overload" << t << endl;
+    cout << "Second overload " << t << endl;
 }
 
 template <typename First, typename... Rest> 
 void print(const First& first, const Rest&... rest) {
-    cout << "Third overload" << first << ", ";
+    cout << "Third overload " << first << ", ";
     print(rest...); // <name>... -- синтаксис раскрытия пакета параметров   
 }
 
