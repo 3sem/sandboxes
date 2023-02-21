@@ -33,3 +33,10 @@ cxxabi -- Бинарный интерфейс С++, предоставляющи
 __class_type_info
 
 
+call    __cxa_allocate_exception
+    movl    $0, 8(%esp)
+    movl    $_ZTI9Exception, 4(%esp)
+    movl    %eax, (%esp)
+    call    __cxa_throw
+
+
