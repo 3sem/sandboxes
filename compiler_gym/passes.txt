@@ -1,0 +1,607 @@
+
+-add-discriminators
+	
+Add DWARF path discriminators
+
+-adce
+	
+Aggressive Dead Code Elimination
+
+-aggressive-instcombine
+	
+Combine pattern based expressions
+
+-alignment-from-assumptions
+	
+Alignment from assumptions
+
+-always-inline
+	
+Inliner for always_inline functions
+
+-argpromotion
+	
+Promote ‘by reference’ arguments to scalars
+
+-attributor
+	
+Deduce and propagate attributes
+
+-barrier
+	
+A No-Op Barrier Pass
+
+-bdce
+	
+
+Bit-Tracking Dead Code Elimination
+
+-break-crit-edges
+	
+
+Break critical edges in CFG
+
+-simplifycfg
+	
+
+Simplify the CFG
+
+-callsite-splitting
+	
+
+Call-site splitting
+
+-called-value-propagation
+	
+
+Called Value Propagation
+
+-canonicalize-aliases
+	
+
+Canonicalize aliases
+
+-consthoist
+	
+
+Constant Hoisting
+
+-constmerge
+	
+
+Merge Duplicate Global Constants
+
+-constprop
+	
+
+Simple constant propagation
+
+-coro-cleanup
+	
+
+Lower all coroutine related intrinsics
+
+-coro-early
+	
+
+Lower early coroutine intrinsics
+
+-coro-elide
+	
+
+Coroutine frame allocation elision and indirect calls replacement
+
+-coro-split
+	
+
+Split coroutine into a set of functions driving its state machine
+
+-correlated-propagation
+	
+
+Value Propagation
+
+-cross-dso-cfi
+	
+
+Cross-DSO CFI
+
+-deadargelim
+	
+
+Dead Argument Elimination
+
+-dce
+	
+
+Dead Code Elimination
+
+-die
+	
+
+Dead Instruction Elimination
+
+-dse
+	
+
+Dead Store Elimination
+
+-reg2mem
+	
+
+Demote all values to stack slots
+
+-div-rem-pairs
+	
+
+Hoist/decompose integer division and remainder
+
+-early-cse-memssa
+	
+
+Early CSE w/ MemorySSA
+
+-elim-avail-extern
+	
+
+Eliminate Available Externally Globals
+
+-ee-instrument
+	
+
+Instrument function entry/exit with calls to e.g. mcount()(pre inlining)
+
+-flattencfg
+	
+
+Flatten the CFG
+
+-float2int
+	
+
+Float to int
+
+-forceattrs
+	
+
+Force set function attributes
+
+-inline
+	
+
+Function Integration/Inlining
+
+-insert-gcov-profiling
+	
+
+Insert instrumentation for GCOV profiling
+
+-gvn-hoist
+	
+
+Early GVN Hoisting of Expressions
+
+-gvn
+	
+
+Global Value Numbering
+
+-globaldce
+	
+
+Dead Global Elimination
+
+-globalopt
+	
+
+Global Variable Optimizer
+
+-globalsplit
+	
+
+Global splitter
+
+-guard-widening
+	
+
+Widen guards
+
+-hotcoldsplit
+	
+
+Hot Cold Splitting
+
+-ipconstprop
+	
+
+Interprocedural constant propagation
+
+-ipsccp
+	
+
+Interprocedural Sparse Conditional Constant Propagation
+
+-indvars
+	
+
+Induction Variable Simplification
+
+-irce
+	
+
+Inductive range check elimination
+
+-infer-address-spaces
+	
+
+Infer address spaces
+
+-inferattrs
+	
+
+Infer set function attributes
+
+-inject-tli-mappings
+	
+
+Inject TLI Mappings
+
+-instsimplify
+	
+
+Remove redundant instructions
+
+-instcombine
+	
+
+Combine redundant instructions
+
+-instnamer
+	
+
+Assign names to anonymous instructions
+
+-jump-threading
+	
+
+Jump Threading
+
+-lcssa
+	
+
+Loop-Closed SSA Form Pass
+
+-licm
+	
+
+Loop Invariant Code Motion
+
+-libcalls-shrinkwrap
+	
+
+Conditionally eliminate dead library calls
+
+-load-store-vectorizer
+	
+
+Vectorize load and Store instructions
+
+-loop-data-prefetch
+	
+
+Loop Data Prefetch
+
+-loop-deletion
+	
+
+Delete dead loops
+
+-loop-distribute
+	
+
+Loop Distribution
+
+-loop-fusion
+	
+
+Loop Fusion
+
+-loop-guard-widening
+	
+
+Widen guards (within a single loop, as a loop pass)
+
+-loop-idiom
+	
+
+Recognize loop idioms
+
+-loop-instsimplify
+	
+
+Simplify instructions in loops
+
+-loop-interchange
+	
+
+Interchanges loops for cache reuse
+
+-loop-load-elim
+	
+
+Loop Load Elimination
+
+-loop-predication
+	
+
+Loop predication
+
+-loop-reroll
+	
+
+Reroll loops
+
+-loop-rotate
+	
+
+Rotate Loops
+
+-loop-simplifycfg
+	
+
+Simplify loop CFG
+
+-loop-simplify
+	
+
+Canonicalize natural loops
+
+-loop-sink
+	
+
+Loop Sink
+
+-loop-reduce
+	
+
+Loop Strength Reduction
+
+-loop-unroll-and-jam
+	
+
+Unroll and Jam loops
+
+-loop-unroll
+	
+
+Unroll loops
+
+-loop-unswitch
+	
+
+Unswitch loops
+
+-loop-vectorize
+	
+
+Loop Vectorization
+
+-loop-versioning-licm
+	
+
+Loop Versioning For LICM
+
+-loop-versioning
+	
+
+Loop Versioning
+
+-loweratomic
+	
+
+Lower atomic intrinsics to non-atomic form
+
+-lower-constant-intrinsics
+	
+
+Lower constant intrinsics
+
+-lower-expect
+	
+
+Lower ‘expect’ Intrinsics
+
+-lower-guard-intrinsic
+	
+
+Lower the guard intrinsic to normal control flow
+
+-lowerinvoke
+	
+
+Lower invoke and unwind, for unwindless code generators
+
+-lower-matrix-intrinsics
+	
+
+Lower the matrix intrinsics
+
+-lowerswitch
+	
+
+Lower SwitchInst’s to branches
+
+-lower-widenable-condition
+	
+
+Lower the widenable condition to default true value
+
+-memcpyopt
+	
+
+MemCpy Optimization
+
+-mergefunc
+	
+
+Merge Functions
+
+-mergeicmps
+	
+
+Merge contiguous icmps into a memcmp
+
+-mldst-motion
+	
+
+MergedLoadStoreMotion
+
+-sancov
+	
+
+Pass for instrumenting coverage on functions
+
+-name-anon-globals
+	
+
+Provide a name to nameless globals
+
+-nary-reassociate
+	
+
+Nary reassociation
+
+-newgvn
+	
+
+Global Value Numbering
+
+-pgo-memop-opt
+	
+
+Optimize memory intrinsic using its size value profile
+
+-partial-inliner
+	
+
+Partial Inliner
+
+-partially-inline-libcalls
+	
+
+Partially inline calls to library functions
+
+-post-inline-ee-instrument
+	
+
+Instrument function entry/exit with calls to e.g. mcount()” “(post inlining)
+
+-functionattrs
+	
+
+Deduce function attributes
+
+-mem2reg
+	
+
+Promote Memory to ” “Register
+
+-prune-eh
+	
+
+Remove unused exception handling info
+
+-reassociate
+	
+
+Reassociate expressions
+
+-redundant-dbg-inst-elim
+	
+
+Redundant Dbg Instruction Elimination
+
+-rpo-functionattrs
+	
+
+Deduce function attributes in RPO
+
+-rewrite-statepoints-for-gc
+	
+
+Make relocations explicit at statepoints
+
+-sccp
+	
+
+Sparse Conditional Constant Propagation
+
+-slp-vectorizer
+	
+
+SLP Vectorizer
+
+-sroa
+	
+
+Scalar Replacement Of Aggregates
+
+-scalarizer
+	
+
+Scalarize vector operations
+
+-separate-const-offset-from-gep
+	
+
+Split GEPs to a variadic base and a constant offset for better CSE
+
+-simple-loop-unswitch
+	
+
+Simple unswitch loops
+
+-sink
+	
+
+Code sinking
+
+-speculative-execution
+	
+
+Speculatively execute instructions
+
+-slsr
+	
+
+Straight line strength reduction
+
+-strip-dead-prototypes
+	
+
+Strip Unused Function Prototypes
+
+-strip-debug-declare
+	
+
+Strip all llvm.dbg.declare intrinsics
+
+-strip-nondebug
+	
+
+Strip all symbols, except dbg symbols, from a module
+
+-strip
+	
+
+Strip all symbols from a module
+
+-tailcallelim
+	
+
+Tail Call Elimination
+
+-mergereturn
+	
+
+Unify function exit nodes
