@@ -58,4 +58,6 @@ Ashouri, Amir H. & Bignoli, Andrea & Palermo, Gianluca & Silvano, Cristina. (201
 
 Amir H. Ashouri, Andrea Bignoli, Gianluca Palermo, Cristina Silvano, Sameer Kulkarni, and John Cavazos. 2017. MiCOMP: Mitigating the Compiler Phase-Ordering Problem Using Optimization Sub-Sequences and Machine Learning. ACM Trans. Archit. Code Optim. 14, 3, Article 29 (September 2017), 28 pages. https://doi.org/10.1145/3124452
 
+Liu H, Luo J, Li Y and Wu Z. (2021). Iterative Compilation Optimization Based on Metric Learning and Collaborative Filtering. ACM Transactions on Architecture and Code Optimization. 19:1. (1-25). Online publication date: 31-Mar-2022.
+
 
