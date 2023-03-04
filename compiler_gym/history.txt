@@ -47,6 +47,8 @@
 
 Z. Wang and M. O’Boyle, "Machine Learning in Compiler Optimization," in Proceedings of the IEEE, vol. 106, no. 11, pp. 1879-1901, Nov. 2018, doi: 10.1109/JPROC.2018.2817118.
 
+
+
 Bruce W Leverett et al.. 1979. An overview of the production quality compiler-compiler project. Carnegie Mellon University, Department of Computer Science
 
 M Haneda. 2005. Optimizing general purpose compiler optimization. Proceedings of the 2nd conference on Computing frontiers (2005), 180–188. http://dl.acm.org/citation.cfm?id=1062293
@@ -85,4 +87,17 @@ Amir H. Ashouri, Andrea Bignoli, Gianluca Palermo, Cristina Silvano, Sameer Kulk
 
 Liu H, Luo J, Li Y and Wu Z. (2021). Iterative Compilation Optimization Based on Metric Learning and Collaborative Filtering. ACM Transactions on Architecture and Code Optimization. 19:1. (1-25). Online publication date: 31-Mar-2022.
 
-a
+Q. Huang, et al., "AutoPhase: Compiler Phase-Ordering for HLS with Deep Reinforcement Learning," in 2019 IEEE 27th Annual International Symposium on Field-Programmable Custom Computing Machines (FCCM), San Diego, CA, USA, 2019.
+POSET-RL: https://arxiv.org/abs/2208.04238
+[Wang, H. et al (4 more authors) (2022) Automating Reinforcement Learning Architecture Design for Code Optimization. In: CC 2022: Proceedings of the 31st ACM SIGPLAN International Conference on Compiler Construction. The 31st ACM SIGPLAN International Conference on Compiler Construction (CC ’22), 02-03 Apr 2022.
+VenkataKeerthy, Rohit Aggarwal, Shalini Jain, Maunendra Sankar Desarkar, Ramakrishna Upadrasta, and Y. N. Srikant. 2020. IR2VEC: LLVM IR Based Scalable Program Embeddings. ACM Trans. Archit. Code Optim. 17, 4, Article 32 (December 2020), 27 pages.
+Chris Cummins, Bram Wasti, Jiadong Guo, Brandon Cui, Jason Ansel, Sahir Gomez, Somya Jain, Jia Liu, Olivier Teytaud, Benoit Steiner, Yuandong Tian, and Hugh Leather. 2022. CompilerGym: robust, performant compiler optimization environments for AI research. In Proceedings of the 20th IEEE/ACM International Symposium on Code Generation and Optimization (CGO '22). IEEE Press, 92–105.
+Liu et al. (2021) Hongzhi Liu, Jie Luo, Ying Li, and Zhonghai Wu. 2021. Iterative Compilation Optimization Based on Metric Learning and Collaborative Filtering. ACM Trans. Arch. Code Optim. 19, 1, Article 2 (December 2021), 25 pages. https://doi.org/10.1145/3480250
+Amir H. Ashouri, Andrea Bignoli, Gianluca Palermo, Cristina Silvano, Sameer Kulkarni, and John Cavazos. 2017. MiCOMP: Mitigating the Compiler Phase-Ordering Problem Using Optimization Sub-Sequences and Machine Learning. ACM Trans. Archit. Code Optim. 14, 3, Article 29 (September 2017), 28 pages. https://doi.org/10.1145/3124452
+Zavodskikh R. K., Efanov N. N., Tomashev D. D.  (2022). Using the LLVM Framework for static performance prediction with embedding of intermediate representation. Proceedings of Moscow Institute of Physics and Technology. Vol. 14, 3 (55) pp 34-45.
+Tağtekin, B., Höke, B., Sezer, M. K., & Öztürk, M. U. (2021, August). FOGA: Flag Optimization with Genetic Algorithm. In 2021 International Conference on INnovations in Intelligent SysTems and Applications (INISTA) (pp. 1-6). IEEE. 
+F. Agakov, E. Bonilla, J. Cavazos, B. Franke, G. Fursin, M. F. O’Boyle, J. Thomson, M. Toussaint, and C. K. Williams, “Using machine learning to focus iterative optimization,” in International Symposium on Code Generation and Optimization (CGO’06). IEEE, 2006, pp. 11–pp.
+PROGRAML: A Graph-based Program Representation for Data Flow Analysis and Compiler Optimizations  (2021) https://chriscummins.cc/pub/2021-icml.pdf
+
+
+
