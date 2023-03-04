@@ -12,7 +12,7 @@
 Так или иначе, в последние два десятиления основные усилия исследователей были направлены на преодоление проблемы отсутствия трансфера знаний между экспериментами и на ускорение поиска по пространству оптимизации, с применением различных приближённых методов поиска.
 --
 
-Развитие методов машинного обучения в последнее десятилетие привело к совершенствованию и изобретению новых подходов к обозначенным задачам, в совокупности с непрерывной доработкой компиляторных средств и инфраструктур.
+Развитие методов машинного обучения в последнее десятилетие привело к совершенствованию и изобретению новых подходов к обозначенным задачам, в совокупности с непрерывной доработкой компиляторных средств и инфраструктур. В первую очередь, были разработаны подходы и инструменты, ускоряющие итеративную компиляцию за счёт выделения подпространства оптимизации, по которому осуществляется перебор [cgo06], и предоставляющие методологическую и инфраструктурную базу для проведения экспериментов с авто-настройкой компиляторов различными способами [,милепост]. Ряд работ был посвящён предсказанию производительности программы после применения соответствующей трансофрмации [-]. Ниже приведён краткий обзор различных подходов к предсказанию оптимальной последовательности трансформаций на основе машинного обучения. 
 
 Обучение с учителем.
 Основным фактором, затрудняющим применение обучения с учителем в данной области, является требование подготовки обучающих выборок: в виду того, что данные и сценарии использования программы в общем случае могут не поддаваться предсказаниям на этапе компиляции, сбор огромной обучающей выборки может оказаться бесполезным для различных задач и сценариев. К примеру, обучение модели по результатам производительности на одной архитектуре может быть не переносимо н другую. Тем не менее, было разработано множество решений, использующих разлиные подходы обучения с учителем: Байесовские сети [,], деревья принятия решения и случайные леса [], обучение метрики [], графовые ядра [], иные методы []. В данной области просматривается тренд интеграции разрабатываемых решений с рекомендательными системами.
@@ -36,6 +36,8 @@ Z. Wang and M. O’Boyle, "Machine Learning in Compiler Optimization," in Procee
 
 M Haneda. 2005. Optimizing general purpose compiler optimization. Proceedings of the 2nd conference on Computing frontiers (2005), 180–188. http://dl.acm.org/citation.cfm?id=1062293
 
+F. Agakov, E. Bonilla, J.Cavazos, B.Franke, G. Fursin, M. O’Boyle, J. Thomson, M. Toussaint, and C. Williams, “Using machine learning to focus iterative optimization,” in CGO ’06: Proceedings of the International Symposium on Code Generation and Optimization. Washington, DC, USA: IEEE Computer Society, 03 2006, pp. 295–305. [Online]. Available: http://www.anc.ed.ac.uk/machine-learning/colo/cgo06.pdf
+
 J Thomson, M O’Boyle, G Fursin, and B Franke. 2009. Reducing training time in a one-shot machine learning-based compiler. International Workshop on Languages and Compilers for Parallel Computing (2009), 399–407. http://link.springer.com/10.1007
 
 Amir Hossein Ashouri, Vittorio Zaccaria, Sotirios Xydis, Gianluca Palermo, and Cristina Silvano. 2013. A framework for Compiler Level statistical analysis over customized VLIW architecture. In VLSI-SoC. 124–129. DOI:http://dx.doi.org/10.1109/VLSI-SoC.2013.6673262
@@ -44,14 +46,31 @@ LGA Martins and R Nobre. 2016. Clustering-Based Selection for the Exploration of
 
 Luiz GA Martins, Ricardo Nobre, Alexandre CB Delbem, Eduardo Marques, and João MP Cardoso. 2014. Exploration of compiler optimization sequences using clustering-based selection. In ACM SIGPLAN Notices, Vol. 49. ACM, 63–72
 
-KD Cooper, PJ Schielke, and D Subramanian. 1999. Optimizing for reduced code space using genetic algorithms. ACM
-SIGPLAN Notices (1999). http://dl.acm.org/citation.cfm?id=314414
+KD Cooper, PJ Schielke, and D Subramanian. 1999. Optimizing for reduced code space using genetic algorithms. ACM SIGPLAN Notices (1999). http://dl.acm.org/citation.cfm?id=314414
 
-KD Cooper, D Subramanian, and L Torczon. 2002. Adaptive optimizing compilers for the 21st century. The Journal of
-Supercomputing (2002). http://link.springer.com/article/10.1023/A:1015729001611
+KD Cooper, D Subramanian, and L Torczon. 2002. Adaptive optimizing compilers for the 21st century. The Journal of Supercomputing (2002). http://link.springer.com/article/10.1023/A:1015729001611
 
 Felix Agakov, Edwin Bonilla, John Cavazos, Björn Franke, Grigori Fursin, Michael FP O’Boyle, John Thomson, Marc Toussaint, and Christopher KI Williams. 2006. Using machine learning to focus iterative optimization. In Proceedings of the International Symposium on Code Generation and Optimization. IEEE Computer Society, 295–305.
 
+G. Fursin, C. Miranda, O. Temam, M. Namolaru, E. Yom-Tov, A. Zaks, B. Mendelson, P. Barnard, E. Ashton, E. Courtois, F. Bodin, E. Bonilla, J. Thomson, H. Leather, C. Williams, and M. O’Boyle, “Milepost gcc: machine learning based research compiler,” in Proceedings of the GCC Developers’ Summit, June 2008.
+
+C.-K. Luk, S. Hong, and H. Kim, “Qilin: Exploiting
+parallelism on heterogeneous multiprocessors with adaptive
+mapping,” in Proceedings of the 42nd Annual IEEE/ACM
+International Symposium on Microarchitecture, ser.
+MICRO 42. New York, NY, USA: Association for
+Computing Machinery, 2009, p. 45–55. [Online]. Available:
+https://doi.org/10.1145/1669112.1669121
+
+E. Park, L.-N. Pouche, J. Cavazos, A. Cohen, and P. Sadayappan, “Predictive modeling in a polyhedral optimization space,”
+in Proceedings of the 9th Annual IEEE/ACM International Symposium on Code Generation and Optimization, ser. CGO
+’11. USA: IEEE Computer Society, 2011, p. 119–129.
+
+B. C. Lee and D. M. Brooks, “Accurate and efficient
+regression modeling for microarchitectural performance
+and power prediction,” SIGARCH Comput. Archit. News,
+vol. 34, no. 5, p. 185–194, Oct. 2006. [Online]. Available:
+https://doi.org/10.1145/1168919.1168881
 S. Kulkarni and J. Cavazos. 2012. Mitigating the compiler optimization phase-ordering problem using machine learning. ACM SIGPLAN Notices (2012). http://dl.acm.org/citation.cfm?id=2384628
 
 Ashouri, Amir H. & Bignoli, Andrea & Palermo, Gianluca & Silvano, Cristina. (2016). Predictive Modeling Methodology for Compiler Phase-Ordering. 10.1145/2872421.2872424.
