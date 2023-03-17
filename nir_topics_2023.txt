@@ -1,0 +1,55 @@
+In Russian:
+
+В исследовательской работе предлагаются к разработке и доработке алгоритмы, инструменты и методы автоматизированного поиска оптимальных последовательностей компиляторных трансформаций на базе инфраструктуры LLVM с помощью обучения подкреплением,реализующие как многошаговый выбор проходов, так и поиск оптимальных параметров для отдельных параметрических оптимизационных проходов.
+
+
+Темы (направления) для студентов / аспирантов
+1) Исследование, модификация и разработка масштабируемых методов характеризации программ для избранных задач машинного обучения.
+
+Цель: улучшение точности и масштабируемости существующих способов представления программ для построения пространства наблюдения агента (в RL), а также выработка способов, учитывающих программную семантику, но при этом масштабируемых на относительно большие единицы трансляции.
+
+2) Разработка методов ускорения поиска оптимальных последовательностей оптимизирующих трансформаций компилятора
+Цель: создание многошаговых методов поиска последовательностей трансформаций, с одной стороны, ускоряющих поиск, а с другой -- менее подверженных сходимости к локальным оптимумам.
+
+3) Модификация методов поиска оптимальных последовательностей оптимизирующих трансформаций компилятора с учётом параметров трансформаций. 
+
+Цель: модификация существующих методов построения пространства шагов и пространства наблюдения агента с целью выбора оптимальных параметров для параметрических оптимизационных проходов.
+
+4) (Для Леднёвой Александры) Разработка статического детектора векторизуемых циклов на основе решателя задачи КС-достижимости на граф-структурированном представлении программы.
+
+Keywords: компиляторы, машинное обучение, дискретная оптимизация, производительность ПО, математическое моделирование, статистика, графовые алгоритмы
+--
+In English:
+
+The research work proposes to develop and refine algorithms, tools and methods for automated search for optimal ordering of compiler transformations based on the LLVM infrastructure using reinforcement learning, which implement both a multi-step choice of passes and the search for optimal parameters for some parametric optimization passes.
+
+Topics for students / PhD students
+
+1) Research, modification and development of scalable methods for characterizing programs for certain machine learning problems.
+
+Purpose: to improve the accuracy and scalability of existing methods of representing programs for constructing an agent's observation space (in RL), as well as to develop methods that take into account program semantics, but at the same time are well-scalable.
+
+2) Development of methods for accelerating the search for compiler phase-ordering problem
+Purpose: creation of multi-step methods for phase-ordering, on the one hand, speeding up the search, and on the other hand, less prone to convergence to local optima.
+
+3) Modification of phase-ordering methods, taking into account the parameters of transformations.
+
+Purpose: modification of existing methods for constructing the action spaces and the agent's observation space in order to select the optimal parameters for parametric optimization passes.
+
+4) (Specially for Alexandra Ledneva) Development of vectorizable cycles static detector based on the CF-reachability solver for graph-structured program representation.
+
+Keywords: compilers, machine learning, discrete optimization, software performance, mathematical modeling, statistics, graph algorithms
+--
+Требования:
+- Уверенное знание Python и C++.
+- Опыт постановки и обработки результатов нейросетевого эксперимента и обработке экспериментальных данных в принципе (статистический анализ полученных результатов, корреляционный анализ).
+- Уверенное владение командной строкой Linux, представление программирования под Linux/другую Unix-like ОС.
+- Умение быстро читать техническую литературу, в особенности документацию.
+- Общее представление о внутреннем устройстве современного компилятора, о промежуточном представлении программ и его анализе/трансформациях.
+- Общее представление о современных методах, используемых в обучении с подкреплением.
+- Опыт работы либо готовность самостоятельно и быстро освоить библиотеки машинного обучения Torch / Keras / RLLib -- строить архитектуры нейросетей либо использовать готовые, запускать эксперименты, анализировать результаты, подбирать параметры обучения.
+
+
+Очень желательно, будет плюсом.
+- Опыт работы с инструментами LLVM (opt, llc, и др) \ Опыт разработки с использованием LLVM
+- Опыт работы с методами обучения с подкреплением (A(2,3)C, Q-Learning и др.).
