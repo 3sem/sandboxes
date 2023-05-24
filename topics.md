@@ -24,4 +24,8 @@
    - [ ] ProGraML, etc technigues examination
    - [ ] Exhaustive comparison of chosen existing characterization approaches
    - [ ] Automatical explicit features selection from statistical data
-   - [ ] 
+
+### CFR-L Static Analysis
+ - [x] Pathfinder
+    - [x] Redundancy detector
+    - [ ] Vectorizer Helper  
