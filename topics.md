@@ -1,13 +1,13 @@
 ### Compilers + ML
 
-- [] Offline phase-ordering / picking via heuristic search
-  - [] GCC
-    - [] Standalone
-  - [] LLVM
-    - [] Standalone
-    - [] CompilerGym-based
+- [x] Offline phase-ordering / picking via heuristic search
+  - [x] GCC
+    - [x] Standalone
+  - [x] LLVM
+    - [x] Standalone
+    - [x] CompilerGym-based
     
- - [] Multistep / passes subsequences mining
+ - [x] Multistep / passes subsequences mining
  
- - [] Multi-criterial search
+ - [x] Multi-criterial search
    
