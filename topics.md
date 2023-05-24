@@ -18,7 +18,7 @@
     
  - [ ] Phase-ordering in GCC implementation
  
- - [x] Program characterization
+ - [x] Program characterization for ML in compilers
    - [x] IR2Vec D1 cache performance modeling [Suspended]
    - [ ] IR2Vec flow-aware improvement
    - [ ] ProGraML, etc technigues examination
