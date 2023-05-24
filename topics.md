@@ -28,4 +28,7 @@
 ### CFR-L Static Analysis
  - [x] Pathfinder
     - [x] Redundancy detector
-    - [ ] Vectorizer Helper  
+    - [ ] Vectorizer Helper
+
+### MCS Static Analysis
+ - [x] Static analyzer based on grammars with two-sided contexts
