@@ -28,6 +28,7 @@
 ### CFR-L Static Analysis
  - [x] Pathfinder
     - [x] Redundancy detector
+      This project was aimed to PoC on implemented static analyzer. 
     - [ ] Vectorizer Helper
 
 ### MCS Static Analysis
