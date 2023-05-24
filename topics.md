@@ -4,6 +4,8 @@
 
 
 - [x] Offline phase-ordering / picking via heuristic search
+
+[Links with title](http://crm.ics.org.ru/uploads/crmissues/crm_2023_01/58_zavodskikh.pdf "Repo")
   - [x] GCC
     - [x] Standalone
   - [x] LLVM
@@ -21,7 +23,7 @@
  - [x] Program characterization for ML in compilers
    - [x] IR2Vec D1 cache performance modeling [Suspended]
      
-     (http://crm.ics.org.ru/uploads/crmissues/crm_2023_01/58_zavodskikh.pdf "Paper")
+     [Links with title](http://crm.ics.org.ru/uploads/crmissues/crm_2023_01/58_zavodskikh.pdf "Paper")
    - [ ] IR2Vec flow-aware improvement
    - [ ] ProGraML, etc technigues examination
    - [ ] Exhaustive comparison of chosen existing characterization approaches
