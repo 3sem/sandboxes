@@ -20,6 +20,7 @@
  
  - [x] Program characterization for ML in compilers
    - [x] IR2Vec D1 cache performance modeling [Suspended]
+     Paper: [Links with title](http://crm.ics.org.ru/uploads/crmissues/crm_2023_01/58_zavodskikh.pdf "Paper")
    - [ ] IR2Vec flow-aware improvement
    - [ ] ProGraML, etc technigues examination
    - [ ] Exhaustive comparison of chosen existing characterization approaches
