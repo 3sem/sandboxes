@@ -42,4 +42,7 @@
 
 ### SW Verification
  - [x] OpenArkCompiler intermediate representation verifier [Finished]
+    
     [Paper](https://mipt.ru/upload/medialibrary/974/03.pdf "Paper_Verifier_Pass")
+    
+ - [x] Co-routines TLA+ model checking for distributed queues system [Finished]
