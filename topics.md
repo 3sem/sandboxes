@@ -37,7 +37,7 @@
     - [ ] Vectorizer Helper
 
 ### MCS Static Analysis
- - [x] Static analyzer based on grammars with two-sided contexts
+ - [x] Static analyzer based on grammars with two-sided contexts [Suspended]
 
 
 ### SW Verification
