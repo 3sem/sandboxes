@@ -25,7 +25,7 @@
      
      [Paper](http://crm.ics.org.ru/uploads/crmissues/crm_2023_01/58_zavodskikh.pdf "Paper_ICS_2023")
    - [ ] IR2Vec flow-aware improvement
-   - [ ] ProGraML, etc technigues examination
+   - [ ] ProGraML, etc characterization techniques examination
    - [ ] Exhaustive comparison of chosen existing characterization approaches
    - [ ] Automatical explicit features selection from statistical data
 
