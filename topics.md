@@ -3,7 +3,7 @@
 ### Compilers + ML
 
 
-- [x] Offline phase-ordering / picking via heuristic search
+- [x] Offline / iterative phase-ordering / picking via heuristic search and RL
 
   [Repo](http://crm.ics.org.ru/uploads/crmissues/crm_2023_01/58_zavodskikh.pdf "Repo")
   - [x] GCC
