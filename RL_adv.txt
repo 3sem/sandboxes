@@ -1,3 +1,13 @@
+Ручной отбор подпоследовательностей пассов:
+"Principal components of application features": "Finding pattern in a graph topology"
+Amir H. Ashouri:
+1) tree-based passes are interdependent
+2) loop-unroll impacts on branch-probability
+
+--
+
+
+
 Среда -- Observation Space
 
 
