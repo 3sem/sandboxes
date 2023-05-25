@@ -23,7 +23,7 @@
  - [x] Program characterization for ML in compilers
    - [x] IR2Vec D1 cache performance modeling [Suspended]
      
-     [Paper](http://crm.ics.org.ru/uploads/crmissues/crm_2023_01/58_zavodskikh.pdf "Paper")
+     [Paper](http://crm.ics.org.ru/uploads/crmissues/crm_2023_01/58_zavodskikh.pdf "Paper_ICS_2023")
    - [ ] IR2Vec flow-aware improvement
    - [ ] ProGraML, etc technigues examination
    - [ ] Exhaustive comparison of chosen existing characterization approaches
@@ -38,3 +38,8 @@
 
 ### MCS Static Analysis
  - [x] Static analyzer based on grammars with two-sided contexts
+
+
+### SW Verification
+ - [x] OpenArkCompiler intermediate representation verifier [Finished]
+    [Paper](https://mipt.ru/upload/medialibrary/974/03.pdf "Paper_Verifier_Pass")
