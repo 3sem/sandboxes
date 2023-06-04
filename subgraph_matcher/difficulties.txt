@@ -1,0 +1,13 @@
+The methods can be sorted into 2 parts according to patterns mining manner:
+1) off-line (preset of patterns)
+2) on-line patterns extraction from the analyzed graphs, for ex., by clustering
+
+The main difficulties while on-line mathching are:
+
+1) design space combinatorial explosion; there are 2^k subgraphs in graph of k nodes. So, to avoid exponential complexity, some heuristics and constraints should be applied both for procedure of patterns execution and graphs mining
+
+2) classes of graphs: let it be DAGs, for successfull topological sort applying. Moreover, the isomorphism problem is less difficult for this class of graphs, that for graph in general.
+
+3) connectivity. Does pattern should be one-component connected, or there can be k-graphs? 
+
+4) overlapping. How to split and cover the overlapped subgraphs? 
