@@ -1,3 +1,6 @@
+--
+Patterns mining
+
 The methods can be sorted into 2 parts according to patterns mining manner:
 1) off-line (preset of patterns)
 2) on-line patterns extraction from the analyzed graphs, for ex., by clustering
@@ -14,7 +17,15 @@ The main difficulties while on-line mathching are:
 a) by replications of overlapped 
 b) by properties of the solution, for ex. [1]
 
+--
+Application:
+I. Simple draft:
+1) Subgraphs detected scoring procedure
+2) If < threshold, the no apply. Else, apply.
 
+Recalc
+II. Optimization. Also, we can try to figure optimal solution from 2^m variants, where m is the number of detected graphs, and also 2^m can be reduced to 2^(m-l), where l is the number of duplicated graphs (rough estimation).
+--
 Literature:
 
 1. Galuzzi, Carlo & Vassiliadis, Stamatis. (2008). A Linear Complexity Algorithm for the Automatic Generation of Convex Multiple Input Multiple Output Instructions. International Journal of Electronics. 95. 603-619. 10.1080/00207210801923620. 
