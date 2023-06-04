@@ -11,3 +11,10 @@ The main difficulties while on-line mathching are:
 3) connectivity. Does pattern should be one-component connected, or there can be k-graphs? 
 
 4) overlapping. How to split and cover the overlapped subgraphs? 
+a) by replications of overlapped 
+b) by properties of the solution, for ex. [1]
+
+
+Literature:
+
+1. Galuzzi, Carlo & Vassiliadis, Stamatis. (2008). A Linear Complexity Algorithm for the Automatic Generation of Convex Multiple Input Multiple Output Instructions. International Journal of Electronics. 95. 603-619. 10.1080/00207210801923620. 
