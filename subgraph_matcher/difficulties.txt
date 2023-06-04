@@ -10,6 +10,7 @@ The main difficulties while on-line mathching are:
 1) design space combinatorial explosion; there are 2^k subgraphs in graph of k nodes. So, to avoid exponential complexity, some heuristics and constraints should be applied both for procedure of patterns execution and graphs mining
 
 2) classes of graphs: let it be DAGs, for successfull topological sort applying. Moreover, the isomorphism problem is less difficult for this class of graphs, that for graph in general.
+Moreover, let graph patterns which be convex, in sence that if vertex A and B are in subgraph S \subset G, and B is reachable from A in S, then all of vertexes from the pathes from A to B are also in S.
 
 3) connectivity. Does pattern should be one-component connected, or there can be k-graphs? 
 
