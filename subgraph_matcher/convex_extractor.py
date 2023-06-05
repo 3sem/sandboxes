@@ -3,29 +3,6 @@ import networkx as nx
 import matplotlib.pyplot as plt
 
 
-def inverse_weight(graph, weight='hop'):
-    copy_graph = graph.copy()
-    for n, eds in copy_graph.adjacency_iter():
-        for ed, eattr in eds.items():
-            copy_graph[n][ed][weight] = eattr[weight] * -1
-    return copy_graph
-
-def longest_path(graph, s, t, weight='hop'):
-    #i_w_graph = inverse_weight(graph, weight)
-    return nx.johnson(graph, weight=weight)[s]
-
-def single_source_longest_dag_path_length(graph: nx.DiGraph, s):
-    assert (graph.in_degree(s) == 0)
-    dist = dict.fromkeys(graph.nodes, -float('inf'))
-    dist[s] = 0
-    topo_order = nx.topological_sort(graph)
-    for n in topo_order:
-        for s in graph.successors(n):
-            if dist[s] < dist[n] + graph.edges[n, s]['weight']:
-                dist[s] = dist[n] + graph.edges[n, s]['weight']
-    return dist
-
-
 def convex_single_src_dst_mining(G: nx.DiGraph, constr: dict):
     max_path_len = constr.get("max_path_len", 5)
     mined_subgraphs = []
