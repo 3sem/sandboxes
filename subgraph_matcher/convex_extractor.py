@@ -78,7 +78,7 @@ def convex_multiple_src_mining(G: nx.DiGraph, constr: dict):
             if len(paths_to_append) > 0:
                 res.append(paths_to_append)
     res.sort()
-    return list(k for k,_ in itertools.groupby(res))
+    return list(k for k, _ in itertools.groupby(res))
 
 
 def testG1(hop_w=-1):
@@ -103,11 +103,10 @@ def testG1(hop_w=-1):
 
 if __name__ == '__main__':
     g = testG1()
-    nx.draw_networkx(g)
     res_ = convex_multiple_src_mining(g, {}) # convex_single_src_dst_mining(g,  {})
     res = get_digraphs_from_sg_paths_list(res_)
 
-    for g in res:
+    for i, g in enumerate(res):
         color_map = []
         for node in g:
             if g.in_degree(node) == 0:
