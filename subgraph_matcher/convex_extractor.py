@@ -1,9 +1,10 @@
 import networkx as nx
 
 import matplotlib.pyplot as plt
+import more_itertools
 
 
-def convex_single_src_dst_mining(G: nx.DiGraph, constr: dict):
+def convex_single_src_dst_mining(G: nx.DiGraph, constr: dict, fixed_output=None):
     max_path_len = constr.get("max_path_len", 5)
     mined_subgraphs = []
     mined_paths = []
@@ -35,6 +36,7 @@ def convex_single_src_dst_mining(G: nx.DiGraph, constr: dict):
 
     return mined_paths
 
+
 def get_digraphs_from_sg_paths_list(l: list):
     mined_subgraphs = []
     for sg_paths in l:
@@ -47,40 +49,27 @@ def convex_multiple_src_mining(G: nx.DiGraph, constr: dict):
     max_path_len = constr.get("max_path_len", 5)
     mined_subgraphs = []
     mined_paths = []
+    res = []
     max_len = 0
 # get u,v
-    for u in G.nodes:
-        for v in G.nodes:
-            if u == v: # not interested in self-loops
-                continue
-            #  At first, check reachability from u to v. Then, extract the longest path and check len constrains
-            #  If suitable, extract all the paths into template subgraph.
-            #  Implementation note:
-            #  Sure, there are more convenient ways to check reachability between 2 nodes in graph,
-            #  without paths extraction
-            #  Nevertheless, I've use all simple paths extraction in this point because of a list of throughouts:
-            #  1) We need, at least, extract the longest path, additionally to reachability check
-            #  2) If the subgraph is suitable, we also need all paths from it
-            #  3) There are function in NetworkX, for prototyping it is acceptable.
-            #  Note: on release, there should be not paths extraction, but reachability checking,
-            #  then longest path extraction
-            sg_paths = list(nx.all_simple_paths(G, u, v))
-            if len(sg_paths) > 0:
-                max_len = len(max(sg_paths, key=len))
-                print("paths", sg_paths, "from",u , "to", v, "max_len", max_len)
-                if max_len <= max_path_len:
-                    U = nx.DiGraph()
-                    for path in sg_paths:
-                       #U.add_nodes_from([(nd, nx.get_node_attributes(g, 'name')) for nd in path] )
-                       for i, item in enumerate(path[1:]):
-                           U.add_edge(path[i], item)
-                    mined_paths.append(sg_paths)
-                    mined_subgraphs.append(U)
-
-            else:
-                continue
-
-    return mined_paths, mined_subgraphs
+    for v in G.nodes:
+        lgn = list(G.nodes)
+        lgn.remove(v)
+        miso_paths_list = []
+        power_set = list(more_itertools.powerset(lgn))[1:]
+        for s in power_set:
+            miso_paths_list.clear()
+            for u in s:
+                sg_paths = list(nx.all_simple_paths(G, u, v))
+                if len(sg_paths) > 0:
+                    max_len = len(max(sg_paths, key=len))
+                    print("paths", sg_paths, "from", u, "to", v, "max_len", max_len)
+                    if max_len <= max_path_len:
+                        miso_paths_list.append(sg_paths)
+                else:
+                    continue
+            res.append(miso_paths_list)
+    return res
 
 
 def testG1(hop_w=-1):
@@ -106,7 +95,7 @@ def testG1(hop_w=-1):
 if __name__ == '__main__':
     g = testG1()
 
-    res_ = convex_single_src_dst_mining(g,  {})
+    res_ = convex_multiple_src_mining(g, {}) # convex_single_src_dst_mining(g,  {})
     res = get_digraphs_from_sg_paths_list(res_)
 
     for g in res:
