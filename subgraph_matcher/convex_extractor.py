@@ -1,7 +1,8 @@
 import networkx as nx
-
+from networkx.drawing.nx_agraph import graphviz_layout
 import matplotlib.pyplot as plt
 import more_itertools
+import itertools
 
 
 def convex_single_src_dst_mining(G: nx.DiGraph, constr: dict, fixed_output=None):
@@ -45,6 +46,10 @@ def get_digraphs_from_sg_paths_list(l: list):
     return mined_subgraphs
 
 
+def flatten(l):
+    return [item for sublist in l for item in sublist]
+
+
 def convex_multiple_src_mining(G: nx.DiGraph, constr: dict):
     max_path_len = constr.get("max_path_len", 5)
     mined_subgraphs = []
@@ -55,21 +60,25 @@ def convex_multiple_src_mining(G: nx.DiGraph, constr: dict):
     for v in G.nodes:
         lgn = list(G.nodes)
         lgn.remove(v)
-        miso_paths_list = []
+        subgraph_paths_list = []
         power_set = list(more_itertools.powerset(lgn))[1:]
-        for s in power_set:
-            miso_paths_list.clear()
-            for u in s:
-                sg_paths = list(nx.all_simple_paths(G, u, v))
+
+        for S in power_set: # for each set S in powerset
+            subgraph_paths_list.clear()
+            for u in S: # for each element u in set S
+                sg_paths = list(nx.all_simple_paths(G, u, v)) # extract paths from u to v
                 if len(sg_paths) > 0:
                     max_len = len(max(sg_paths, key=len))
                     print("paths", sg_paths, "from", u, "to", v, "max_len", max_len)
-                    if max_len <= max_path_len:
-                        miso_paths_list.append(sg_paths)
+                    if 0 < max_len <= max_path_len:
+                        subgraph_paths_list.append(sg_paths)
                 else:
                     continue
-            res.append(miso_paths_list)
-    return res
+            paths_to_append = flatten(subgraph_paths_list)
+            if len(paths_to_append) > 0:
+                res.append(paths_to_append)
+    res.sort()
+    return list(k for k,_ in itertools.groupby(res))
 
 
 def testG1(hop_w=-1):
@@ -94,7 +103,7 @@ def testG1(hop_w=-1):
 
 if __name__ == '__main__':
     g = testG1()
-
+    nx.draw_networkx(g)
     res_ = convex_multiple_src_mining(g, {}) # convex_single_src_dst_mining(g,  {})
     res = get_digraphs_from_sg_paths_list(res_)
 
@@ -107,5 +116,8 @@ if __name__ == '__main__':
                 color_map.append('red')
             else:
                 color_map.append('lightblue')
-        nx.draw_networkx(g, node_color=color_map, with_labels=True)
+        plt.title('draw_networkx')
+        pos = graphviz_layout(g, prog='dot')
+        nx.draw(g, pos, node_color=color_map, with_labels=True, arrows=True)
+        #nx.draw_networkx(g, node_color=color_map, pos=pos, with_labels=True)
         plt.show()
