@@ -117,6 +117,7 @@ if __name__ == '__main__':
                 color_map.append('lightblue')
         plt.title('draw_networkx')
         pos = graphviz_layout(g, prog='dot')
-        nx.draw(g, pos, node_color=color_map, with_labels=True, arrows=True)
+        #nx.draw_networkx_labels(g, pos=pos)
+        nx.draw_networkx(g, pos, node_color=color_map, with_labels=True, arrows=True)
         #nx.draw_networkx(g, node_color=color_map, pos=pos, with_labels=True)
         plt.show()
