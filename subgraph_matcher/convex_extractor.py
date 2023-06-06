@@ -38,7 +38,7 @@ def convex_single_src_dst_mining(G: nx.DiGraph, constr: dict, fixed_output=None)
     return mined_paths
 
 
-def get_digraphs_from_sg_paths_list(l: list):
+def get_digraphs_from_sg_paths_list(l: list, g: nx.DiGraph):
     mined_subgraphs = []
     for sg_paths in l:
         U = nx.subgraph(g, list(set(x for l in sg_paths for x in l)))
@@ -102,9 +102,9 @@ def testG1(hop_w=-1):
 
 
 if __name__ == '__main__':
-    g = testG1()
-    res_ = convex_multiple_src_mining(g, {}) # convex_single_src_dst_mining(g,  {})
-    res = get_digraphs_from_sg_paths_list(res_)
+    G = testG1()
+    res_ = convex_multiple_src_mining(G, {}) # convex_single_src_dst_mining(g,  {})
+    res = get_digraphs_from_sg_paths_list(res_, G)
 
     for i, g in enumerate(res):
         color_map = []
@@ -118,6 +118,7 @@ if __name__ == '__main__':
         plt.title('draw_networkx')
         pos = graphviz_layout(g, prog='dot')
         #nx.draw_networkx_labels(g, pos=pos)
-        nx.draw_networkx(g, pos, node_color=color_map, with_labels=True, arrows=True)
+        node_lables = nx.get_node_attributes(g, 'name')
+        nx.draw_networkx(g, pos, node_color=color_map, labels = node_lables, arrows=True)
         #nx.draw_networkx(g, node_color=color_map, pos=pos, with_labels=True)
         plt.show()
