@@ -167,6 +167,9 @@ def visualize_templates(graphs_: list):
         plt.title('draw_networkx')
         pos = graphviz_layout(g, prog='dot')
         node_lables = nx.get_node_attributes(g, 'name')
+        for k in node_lables.keys():
+            node_lables[k] = str(k) + ' ' + node_lables[k]
+
         nx.draw_networkx(g, pos, node_color=color_map, labels=node_lables, arrows=True)
         plt.show()
 
