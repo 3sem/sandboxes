@@ -38,11 +38,14 @@ def convex_single_src_dst_mining(G: nx.DiGraph, constr: dict, fixed_output=None)
     return mined_paths
 
 
-def get_digraphs_from_sg_paths_list(l: list, g: nx.DiGraph):
+def get_digraphs_from_sg_paths_list(l: list, g: nx.DiGraph, max_path_len=5):
     mined_subgraphs = []
     for sg_paths in l:
         U = nx.subgraph(g, list(set(x for l in sg_paths for x in l)))
-        mined_subgraphs.append(U)
+        lp = nx.dag_longest_path(U)
+        lp_len = len(lp)
+        if 0 < lp_len <= max_path_len:
+            mined_subgraphs.append(U)
     return mined_subgraphs
 
 
