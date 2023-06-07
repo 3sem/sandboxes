@@ -1,8 +1,8 @@
 import networkx as nx
-from networkx.drawing.nx_agraph import graphviz_layout
-import matplotlib.pyplot as plt
 import more_itertools
 import itertools
+from networkx.drawing.nx_agraph import graphviz_layout
+import matplotlib.pyplot as plt
 
 
 def convex_single_src_dst_mining(G: nx.DiGraph, constr: dict, fixed_output=None):
@@ -118,12 +118,15 @@ def testG2(hop_w=-1):
     return g
 
 
-if __name__ == '__main__':
-    G = testG1()
+def templates_mining(g: nx.DiGraph):
+
     res_ = convex_multiple_src_mining(G, {}) # convex_single_src_dst_mining(g,  {})
     res = get_digraphs_from_sg_paths_list(res_, G)
+    return res_, res
 
-    for i, g in enumerate(res):
+
+def visualize_templates(graphs_list: list):
+    for i, g in enumerate(graphs_list):
         color_map = []
         for node in g:
             if g.in_degree(node) == 0:
@@ -137,3 +140,9 @@ if __name__ == '__main__':
         node_lables = nx.get_node_attributes(g, 'name')
         nx.draw_networkx(g, pos, node_color=color_map, labels = node_lables, arrows=True)
         plt.show()
+
+
+if __name__ == '__main__':
+    G = testG2()
+    paths, graphs_list = templates_mining(G)
+    visualize_templates(graphs_list)
