@@ -105,6 +105,19 @@ def testG1(hop_w=-1):
     return g
 
 
+def testG2(hop_w=-1):
+    g = nx.DiGraph()
+    g.add_node(1, name="A")
+    g.add_node(2, name="B")
+    g.add_node(3, name="C")
+    g.add_node(4, name="D")
+
+    g.add_edge(1, 2, hop=hop_w)
+    g.add_edge(3, 4, hop=hop_w)
+
+    return g
+
+
 if __name__ == '__main__':
     G = testG1()
     res_ = convex_multiple_src_mining(G, {}) # convex_single_src_dst_mining(g,  {})
@@ -121,8 +134,6 @@ if __name__ == '__main__':
                 color_map.append('lightblue')
         plt.title('draw_networkx')
         pos = graphviz_layout(g, prog='dot')
-        #nx.draw_networkx_labels(g, pos=pos)
         node_lables = nx.get_node_attributes(g, 'name')
         nx.draw_networkx(g, pos, node_color=color_map, labels = node_lables, arrows=True)
-        #nx.draw_networkx(g, node_color=color_map, pos=pos, with_labels=True)
         plt.show()
