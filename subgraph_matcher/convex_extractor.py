@@ -77,9 +77,10 @@ def convex_multiple_src_mining(G: nx.DiGraph, constr: dict):
                         subgraph_paths_list.append(sg_paths)
                 else:
                     continue
-            paths_to_append = flatten(subgraph_paths_list)
-            if len(paths_to_append) > 0:
-                res.append(paths_to_append)
+            if len(subgraph_paths_list) > 0:
+                paths_to_append = flatten(subgraph_paths_list)
+                if len(paths_to_append) > 0:
+                    res.append(paths_to_append)
     res.sort()
     return list(k for k, _ in itertools.groupby(res))
 
