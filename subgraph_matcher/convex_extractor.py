@@ -1,8 +1,8 @@
 import networkx as nx
-import more_itertools
-import itertools
 from networkx.drawing.nx_agraph import graphviz_layout
 import matplotlib.pyplot as plt
+import more_itertools
+import itertools
 
 
 def convex_single_src_dst_mining(G: nx.DiGraph, constr: dict, fixed_output=None):
@@ -86,6 +86,7 @@ def convex_multiple_src_mining(G: nx.DiGraph, constr: dict):
 
 
 def testG1(hop_w=-1):
+    # 2 components
     g = nx.DiGraph()
     g.add_node(1, name="load")
     g.add_node(2, name="un_op")
@@ -106,6 +107,7 @@ def testG1(hop_w=-1):
 
 
 def testG2(hop_w=-1):
+    # two edges, two components
     g = nx.DiGraph()
     g.add_node(1, name="A")
     g.add_node(2, name="B")
@@ -118,15 +120,42 @@ def testG2(hop_w=-1):
     return g
 
 
-def templates_mining(g: nx.DiGraph):
+def testG3(hop_w=-1):
+    # non-semi-lattice, 1 component
+    g = nx.DiGraph()
+    g.add_node(1, name="A")
+    g.add_node(2, name="B")
+    g.add_node(3, name="C")
+    g.add_node(4, name="D")
 
+    g.add_edge(1, 2, hop=hop_w)
+    g.add_edge(3, 4, hop=hop_w)
+    g.add_edge(1, 4, hop=hop_w)
+    g.add_edge(3, 2, hop=hop_w)
+
+    return g
+
+
+def oneout_templates_mining(g: nx.DiGraph):
     res_ = convex_multiple_src_mining(G, {}) # convex_single_src_dst_mining(g,  {})
     res = get_digraphs_from_sg_paths_list(res_, G)
     return res_, res
 
 
-def visualize_templates(graphs_list: list):
-    for i, g in enumerate(graphs_list):
+def multiout_templates_mining(g: nx.DiGraph):
+    wccs = list(nx.weakly_connected_components(G))
+    unconn_paths = []
+    unconn_graphs_list = []
+    for _wcc in wccs:
+        nx_WCC = nx.subgraph(g, list(_wcc))
+        paths, graphs_list = oneout_templates_mining(nx_WCC)
+        unconn_paths.append(paths)
+        unconn_graphs_list.append(graphs_list)
+    return unconn_paths, unconn_graphs_list
+
+
+def visualize_templates(graphs_: list):
+    for i, g in enumerate(graphs_):
         color_map = []
         for node in g:
             if g.in_degree(node) == 0:
@@ -138,11 +167,13 @@ def visualize_templates(graphs_list: list):
         plt.title('draw_networkx')
         pos = graphviz_layout(g, prog='dot')
         node_lables = nx.get_node_attributes(g, 'name')
-        nx.draw_networkx(g, pos, node_color=color_map, labels = node_lables, arrows=True)
+        nx.draw_networkx(g, pos, node_color=color_map, labels=node_lables, arrows=True)
         plt.show()
 
 
 if __name__ == '__main__':
-    G = testG2()
-    paths, graphs_list = templates_mining(G)
+    G = testG3()
+    wcc = list(nx.weakly_connected_components(G))
+    print([v for v in wcc])
+    paths, graphs_list = oneout_templates_mining(G)
     visualize_templates(graphs_list)
