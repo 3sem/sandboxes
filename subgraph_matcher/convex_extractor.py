@@ -127,11 +127,14 @@ def testG3(hop_w=-1):
     g.add_node(2, name="B")
     g.add_node(3, name="C")
     g.add_node(4, name="D")
+    g.add_node(5, name="A")
+    g.add_node(6, name="B")
 
     g.add_edge(1, 2, hop=hop_w)
     g.add_edge(3, 4, hop=hop_w)
     g.add_edge(1, 4, hop=hop_w)
     g.add_edge(3, 2, hop=hop_w)
+    g.add_edge(5, 6, hop=hop_w)
 
     return g
 
@@ -175,8 +178,14 @@ def visualize_templates(graphs_: list):
 
 
 if __name__ == '__main__':
+    freq = dict()
     G = testG3()
     wcc = list(nx.weakly_connected_components(G))
-    print([v for v in wcc])
     paths, graphs_list = oneout_templates_mining(G)
+    for p in graphs_list:
+        phash = nx.weisfeiler_lehman_graph_hash(p, node_attr='name')
+        entry = freq.get(phash, {'graph': p, 'count': 0})
+        entry['count'] += 1
+        freq[phash] = entry
     visualize_templates(graphs_list)
+    visualize_templates([v['graph'] for k, v in freq.items()])
