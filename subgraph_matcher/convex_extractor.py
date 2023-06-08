@@ -64,11 +64,15 @@ def convex_multiple_src_mining(G: nx.DiGraph, constr: dict):
         lgn = list(G.nodes)
         lgn.remove(v)
         subgraph_paths_list = []
-        power_set = list(more_itertools.powerset(lgn))[1:]
-
-        for S in power_set: # for each set S in powerset
+        pss = more_itertools.powerset(lgn)
+        pss.__next__() # skip emply set
+        space = 2 ** len(lgn)
+        for i in range(1, space): # for each set S in powerset
+            S = pss.__next__()
+            if len(S) > max_path_len: # heuristics
+                break
             subgraph_paths_list.clear()
-            for u in S: # for each element u in set S
+            for u in S: # for each element u in S
                 sg_paths = list(nx.all_simple_paths(G, u, v)) # extract paths from u to v
                 if len(sg_paths) > 0:
                     max_len = len(max(sg_paths, key=len))
