@@ -3,7 +3,7 @@ from networkx.drawing.nx_agraph import graphviz_layout
 import matplotlib.pyplot as plt
 import more_itertools
 import itertools
-
+import copy
 
 def convex_single_src_dst_mining(G: nx.DiGraph, constr: dict, fixed_output=None):
     max_path_len = constr.get("max_path_len", 5)
@@ -64,11 +64,18 @@ def convex_multiple_src_mining(G: nx.DiGraph, constr: dict):
         lgn = list(G.nodes)
         if G.in_degree(v) <= 0:
             continue
-        lgn.remove(v)
+        #lgn.remove(v)
+        siblings_space = list(set(G.predecessors(v)))
+        for i in range(1, max_path_len):
+            __ss = []
+            for item in set(siblings_space):
+                __ss += [s for s in set(G.predecessors(item))]
+            siblings_space += __ss
+
         subgraph_paths_list = []
-        pss = more_itertools.powerset(lgn)
+        pss = more_itertools.powerset(siblings_space)
         pss.__next__() # skip emply set
-        space = 2 ** len(lgn)
+        space = 2 ** len(siblings_space)
         for i in range(1, space): # for each set S in powerset
             S = pss.__next__()
             if len(S) > max_path_len: # heuristics
@@ -190,7 +197,6 @@ if __name__ == '__main__':
     G = testG1()
     wcc = list(nx.weakly_connected_components(G))
     for i, w in enumerate(wcc):
-        #print("Graph", i)
         subgraph = nx.subgraph(G, w)
         paths, graphs_list = oneout_templates_mining(subgraph)
         for p in graphs_list:
