@@ -62,6 +62,8 @@ def convex_multiple_src_mining(G: nx.DiGraph, constr: dict):
 # get u,v
     for v in G.nodes:
         lgn = list(G.nodes)
+        if G.in_degree(v) <= 0:
+            continue
         lgn.remove(v)
         subgraph_paths_list = []
         pss = more_itertools.powerset(lgn)
@@ -161,7 +163,7 @@ def multiout_templates_mining(g: nx.DiGraph):
     return unconn_paths, unconn_graphs_list
 
 
-def visualize_templates(graphs_: list):
+def visualize_templates(graphs_: list, save_prefix=None):
     for i, g in enumerate(graphs_):
         color_map = []
         for node in g:
@@ -179,6 +181,8 @@ def visualize_templates(graphs_: list):
 
         nx.draw_networkx(g, pos, node_color=color_map, labels=node_lables, arrows=True)
         plt.show()
+        if save_prefix:
+            plt.savefig(str(i)+".png")
 
 
 if __name__ == '__main__':
@@ -194,5 +198,5 @@ if __name__ == '__main__':
             entry = freq.get(phash, {'graph': p, 'count': 0})
             entry['count'] += 1
             freq[phash] = entry
-        visualize_templates(graphs_list)
-        #visualize_templates([v['graph'] for k, v in freq.items()])
+        #visualize_templates(graphs_list, save_prefix="G"+str(i)+"_")
+    visualize_templates([v['graph'] for k, v in freq.items()])
