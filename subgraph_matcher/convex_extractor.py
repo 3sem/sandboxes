@@ -144,8 +144,8 @@ def testG3(hop_w=-1):
 
 
 def oneout_templates_mining(g: nx.DiGraph):
-    res_ = convex_multiple_src_mining(G, {}) # convex_single_src_dst_mining(g,  {})
-    res = get_digraphs_from_sg_paths_list(res_, G)
+    res_ = convex_multiple_src_mining(g, {}) # convex_single_src_dst_mining(g,  {})
+    res = get_digraphs_from_sg_paths_list(res_, g)
     return res_, res
 
 
@@ -183,13 +183,16 @@ def visualize_templates(graphs_: list):
 
 if __name__ == '__main__':
     freq = dict()
-    G = testG3()
+    G = testG1()
     wcc = list(nx.weakly_connected_components(G))
-    paths, graphs_list = oneout_templates_mining(G)
-    for p in graphs_list:
-        phash = nx.weisfeiler_lehman_graph_hash(p, node_attr='name')
-        entry = freq.get(phash, {'graph': p, 'count': 0})
-        entry['count'] += 1
-        freq[phash] = entry
-    visualize_templates(graphs_list)
-    visualize_templates([v['graph'] for k, v in freq.items()])
+    for i, w in enumerate(wcc):
+        #print("Graph", i)
+        subgraph = nx.subgraph(G, w)
+        paths, graphs_list = oneout_templates_mining(subgraph)
+        for p in graphs_list:
+            phash = nx.weisfeiler_lehman_graph_hash(p, node_attr='name')
+            entry = freq.get(phash, {'graph': p, 'count': 0})
+            entry['count'] += 1
+            freq[phash] = entry
+        visualize_templates(graphs_list)
+        #visualize_templates([v['graph'] for k, v in freq.items()])
