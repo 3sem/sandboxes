@@ -1,4 +1,4 @@
-Let $$N$$ -- number of nodes, $$t$$ -- limit on longest path length in $$T, \mu(T)$$ is the max number of nodes in $$T$$.
+Let $N$ -- number of nodes, $$t$$ -- limit on longest path length in $$T, \mu(T)$$ is the max number of nodes in $$T$$.
 Then:
 
 1) Algorithm performs \leq{N} iterations: foreach(node)
