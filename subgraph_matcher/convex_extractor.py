@@ -185,7 +185,7 @@ def testGmaxmiso(hop_w=-1):
     g.add_node(4, name="*")
     g.add_node(5, name="*")
     g.add_node(6, name="+")
-    g.add_node(6, name="str")
+    g.add_node(7, name="str")
     g.add_edge(1, 4, hop=hop_w)
     g.add_edge(2, 4, hop=hop_w)
     g.add_edge(2, 5, hop=hop_w)
@@ -193,6 +193,54 @@ def testGmaxmiso(hop_w=-1):
     g.add_edge(4, 6, hop=hop_w)
     g.add_edge(5, 6, hop=hop_w)
     g.add_edge(6, 7, hop=hop_w)
+    return g
+
+def testGmaxmiso_3reg(hop_w=-1):
+    g = nx.DiGraph()
+    g.add_node(1, name="+")
+    g.add_node(2, name="+")
+    g.add_node(3, name="*")
+    g.add_node(4, name="*")
+    g.add_node(5, name="*")
+    g.add_node(6, name="+")
+
+    g.add_node(11, name="+")
+    g.add_node(12, name="+")
+    g.add_node(13, name="*")
+    g.add_node(14, name="*")
+    g.add_node(15, name="*")
+    g.add_node(16, name="+")
+
+    g.add_node(21, name="+")
+    g.add_node(22, name="+")
+    g.add_node(23, name="*")
+    g.add_node(24, name="*")
+    g.add_node(25, name="*")
+    g.add_node(26, name="+")
+
+    g.add_edge(1, 4, hop=hop_w)
+    g.add_edge(2, 4, hop=hop_w)
+    g.add_edge(2, 5, hop=hop_w)
+    g.add_edge(3, 5, hop=hop_w)
+    g.add_edge(4, 6, hop=hop_w)
+    g.add_edge(5, 6, hop=hop_w)
+
+    g.add_edge(11, 14, hop=hop_w)
+    g.add_edge(12, 14, hop=hop_w)
+    g.add_edge(12, 15, hop=hop_w)
+    g.add_edge(13, 15, hop=hop_w)
+    g.add_edge(14, 16, hop=hop_w)
+    g.add_edge(15, 16, hop=hop_w)
+
+    g.add_edge(21, 24, hop=hop_w)
+    g.add_edge(22, 24, hop=hop_w)
+    g.add_edge(22, 25, hop=hop_w)
+    g.add_edge(23, 25, hop=hop_w)
+    g.add_edge(24, 26, hop=hop_w)
+    g.add_edge(25, 26, hop=hop_w)
+
+    g.add_edge(6, 13, hop=hop_w)
+    g.add_edge(6, 21, hop=hop_w)
     return g
 
 
@@ -239,7 +287,7 @@ def visualize_templates(graphs_: list, save_prefix=None):
 if __name__ == '__main__':
     freq = dict()
     G = testG1()
-    miso = testGmaxmiso()
+    miso = testGmaxmiso_3reg()
     print(maxmiso_nx_extractor(miso))
     sys.exit(0)
     wcc = list(nx.weakly_connected_components(G))
