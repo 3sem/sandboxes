@@ -1,3 +1,5 @@
+import sys
+
 import networkx as nx
 from networkx.drawing.nx_agraph import graphviz_layout
 import matplotlib.pyplot as plt
@@ -98,6 +100,29 @@ def convex_multiple_src_mining(G: nx.DiGraph, constr: dict):
     return list(k for k, _ in itertools.groupby(res))
 
 
+maxmiso = dict() # format is key-num_of_maxmiso : {nodes: list, induced_subgraph(nodes): nx.DiGraph}
+
+
+def maxmiso_nx_extractor(G):
+    while G.number_of_nodes() > 0:
+        for item in G.nodes:
+            if G.out_degree(item) > 0:
+                continue
+            else:
+                n = item
+                if n not in maxmiso.keys():
+                    maxmiso[n] = [n]
+                break
+        for m in G.nodes:
+            if n != m:
+                asp = list(nx.all_simple_paths(G, m, n))
+                if len(asp) > 0:
+                    flat_list = [item for sublist in asp for item in sublist]
+                    maxmiso[n].extend(flat_list)
+                    maxmiso[n] = list(set(maxmiso[n]))
+        G.remove_nodes_from(maxmiso[n])
+    return maxmiso
+
 def testG1(hop_w=-1):
     # 2 components
     g = nx.DiGraph()
@@ -152,6 +177,25 @@ def testG3(hop_w=-1):
     return g
 
 
+def testGmaxmiso(hop_w=-1):
+    g = nx.DiGraph()
+    g.add_node(1, name="+")
+    g.add_node(2, name="+")
+    g.add_node(3, name="*")
+    g.add_node(4, name="*")
+    g.add_node(5, name="*")
+    g.add_node(6, name="+")
+    g.add_node(6, name="str")
+    g.add_edge(1, 4, hop=hop_w)
+    g.add_edge(2, 4, hop=hop_w)
+    g.add_edge(2, 5, hop=hop_w)
+    #g.add_edge(3, 5, hop=hop_w)
+    g.add_edge(4, 6, hop=hop_w)
+    g.add_edge(5, 6, hop=hop_w)
+    g.add_edge(6, 7, hop=hop_w)
+    return g
+
+
 def oneout_templates_mining(g: nx.DiGraph):
     res_ = convex_multiple_src_mining(g, {}) # convex_single_src_dst_mining(g,  {})
     res = get_digraphs_from_sg_paths_list(res_, g)
@@ -195,6 +239,9 @@ def visualize_templates(graphs_: list, save_prefix=None):
 if __name__ == '__main__':
     freq = dict()
     G = testG1()
+    miso = testGmaxmiso()
+    print(maxmiso_nx_extractor(miso))
+    sys.exit(0)
     wcc = list(nx.weakly_connected_components(G))
     for i, w in enumerate(wcc):
         subgraph = nx.subgraph(G, w)
