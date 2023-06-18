@@ -101,10 +101,48 @@ def convex_multiple_src_mining(G: nx.DiGraph, constr: dict):
 
 
 maxmiso = dict() # format is key-num_of_maxmiso : {nodes: list, induced_subgraph(nodes): nx.DiGraph}
+fanout = dict()
+def get_fanout(G):
+    for n in G.nodes:
+        fanout[n] = G.out_degree(n)
+    return fanout
 
+
+def gen_mms(G: nx.DiGraph, n, cn):
+    global maxmiso
+    global fanout
+    if cn not in maxmiso.keys():
+        maxmiso[cn] = [cn]
+    for p in G.predecessors(n):
+        if fanout[p] == 1:
+            maxmiso[cn].append(p)
+            gen_mms(G, p, cn)
+        else:
+            fanout[p] -= 1
+
+
+def mms_ex(G):
+    global maxmiso
+    global fanout
+    maxmiso = dict()
+    fanout = dict()
+    fanout = get_fanout(G)
+    while G.number_of_nodes() > 0:
+        for item in G.nodes:
+            if G.out_degree(item) > 0:
+                continue
+            else:
+                n = item
+        gen_mms(G, n, n)
+        G.remove_nodes_from(maxmiso[n])
+    return maxmiso
 
 def maxmiso_nx_extractor(G):
+    node_fanout = dict()
+
     while G.number_of_nodes() > 0:
+        for n in G.nodes:
+            node_fanout[n] = G.out_degree(n)
         for item in G.nodes:
             if G.out_degree(item) > 0:
                 continue
@@ -118,8 +156,19 @@ def maxmiso_nx_extractor(G):
                 asp = list(nx.all_simple_paths(G, m, n))
                 if len(asp) > 0:
                     flat_list = [item for sublist in asp for item in sublist]
+                    flat_list = list(set(flat_list))
+                    new_fl = []
+                    for item in flat_list:
+                        if item == n:
+                            new_fl.append(n)
+                            continue
+                        if node_fanout[item] == 1:
+                            new_fl.append(item)
+                        else:
+                            node_fanout[item] -= 1
+
                     maxmiso[n].extend(flat_list)
-                    maxmiso[n] = list(set(maxmiso[n]))
+        maxmiso[n] = list(set(maxmiso[n]))
         G.remove_nodes_from(maxmiso[n])
     return maxmiso
 
@@ -289,6 +338,8 @@ if __name__ == '__main__':
     G = testG1()
     miso = testGmaxmiso_3reg()
     print(maxmiso_nx_extractor(miso))
+    miso = testGmaxmiso_3reg()
+    print(mms_ex(miso))
     sys.exit(0)
     wcc = list(nx.weakly_connected_components(G))
     for i, w in enumerate(wcc):
