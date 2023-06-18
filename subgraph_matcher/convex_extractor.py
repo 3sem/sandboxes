@@ -121,7 +121,7 @@ def gen_mms(G: nx.DiGraph, n, cn):
             fanout[p] -= 1
 
 
-def mms_ex(G):
+def maxmiso_original_recursive(G):
     global maxmiso
     global fanout
     maxmiso = dict()
@@ -137,12 +137,9 @@ def mms_ex(G):
         G.remove_nodes_from(maxmiso[n])
     return maxmiso
 
-def maxmiso_nx_extractor(G):
-    node_fanout = dict()
 
+def maxmiso_nx_extractor(G):
     while G.number_of_nodes() > 0:
-        for n in G.nodes:
-            node_fanout[n] = G.out_degree(n)
         for item in G.nodes:
             if G.out_degree(item) > 0:
                 continue
@@ -156,17 +153,6 @@ def maxmiso_nx_extractor(G):
                 asp = list(nx.all_simple_paths(G, m, n))
                 if len(asp) > 0:
                     flat_list = [item for sublist in asp for item in sublist]
-                    flat_list = list(set(flat_list))
-                    new_fl = []
-                    for item in flat_list:
-                        if item == n:
-                            new_fl.append(n)
-                            continue
-                        if node_fanout[item] == 1:
-                            new_fl.append(item)
-                        else:
-                            node_fanout[item] -= 1
-
                     maxmiso[n].extend(flat_list)
         maxmiso[n] = list(set(maxmiso[n]))
         G.remove_nodes_from(maxmiso[n])
@@ -339,7 +325,7 @@ if __name__ == '__main__':
     miso = testGmaxmiso_3reg()
     print(maxmiso_nx_extractor(miso))
     miso = testGmaxmiso_3reg()
-    print(mms_ex(miso))
+    print(maxmiso_original_recursive(miso))
     sys.exit(0)
     wcc = list(nx.weakly_connected_components(G))
     for i, w in enumerate(wcc):
