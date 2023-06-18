@@ -9,7 +9,7 @@ def convex_single_src_dst_mining(G: nx.DiGraph, constr: dict, fixed_output=None)
     max_path_len = constr.get("max_path_len", 5)
     mined_subgraphs = []
     mined_paths = []
-    nodeattrs = nx.get_node_attributes(g, 'name')
+    nodeattrs = nx.get_node_attributes(G, 'name')
 # get u,v
     for u in G.nodes:
         for v in G.nodes:
