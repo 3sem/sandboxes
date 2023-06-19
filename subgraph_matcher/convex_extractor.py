@@ -118,9 +118,12 @@ def gen_mms(G: nx.DiGraph, n, cn, fanout):
         if (fanout[p] == 1):
             maxmiso[cn].append(p)
             gen_mms(G, p, cn, fanout)
+            fanout[p] = 0
+        elif fanout[p] == 0:
+            return
         else:
-            if fanout[p] > 1:
-                fanout[p] -= 1 # all of fanouts of picked node should be consumed by the current MAXMISO
+            fanout[p] -= 1 # all of fanouts of picked node should be consumed by the current MAXMISO
+
 
 
 def maxmiso_original_recursive(G):
@@ -171,6 +174,7 @@ def maxmiso_nx_extractor(G):
         maxmiso[n] = list(set(maxmiso[n]))
         G.remove_nodes_from(maxmiso[n])
     return maxmiso
+
 
 def testG1(hop_w=-1):
     # 2 components
