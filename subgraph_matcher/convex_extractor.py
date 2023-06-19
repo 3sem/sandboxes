@@ -101,26 +101,23 @@ def convex_multiple_src_mining(G: nx.DiGraph, constr: dict):
 
 
 maxmiso = dict() # format is key-num_of_maxmiso : {nodes: list, induced_subgraph(nodes): nx.DiGraph}
-fanout = dict()
+
 def get_fanout(G):
+    fanout = dict()
     for n in G.nodes:
         out_deg = G.out_degree(n)
         fanout[n] = out_deg
     return fanout
 
-fanout_orig = dict()
 
-
-def gen_mms(G: nx.DiGraph, n, cn):
+def gen_mms(G: nx.DiGraph, n, cn, fanout):
     global maxmiso
-    global fanout
-    global fanout_orig
     if cn not in maxmiso.keys():
         maxmiso[cn] = [cn]
     for p in G.predecessors(n):
         if (fanout[p] == 1):
             maxmiso[cn].append(p)
-            gen_mms(G, p, cn)
+            gen_mms(G, p, cn, fanout)
         else:
             if fanout[p] > 1:
                 fanout[p] -= 1 # all of fanouts of picked node should be consumed by the current MAXMISO
@@ -128,11 +125,7 @@ def gen_mms(G: nx.DiGraph, n, cn):
 
 def maxmiso_original_recursive(G):
     global maxmiso
-    global fanout
-    global fanout_orig
     maxmiso = dict()
-    fanout = dict()
-    fanout_orig = dict()
     fanout_orig = get_fanout(G)
 
     while G.number_of_nodes() > 0:
@@ -142,7 +135,7 @@ def maxmiso_original_recursive(G):
             else:
                 n = item
         fanout = copy.copy(fanout_orig)
-        gen_mms(G, n, n)
+        gen_mms(G, n, n, fanout)
         G.remove_nodes_from(maxmiso[n])
     return maxmiso
 
