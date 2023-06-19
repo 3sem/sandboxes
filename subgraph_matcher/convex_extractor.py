@@ -104,37 +104,57 @@ maxmiso = dict() # format is key-num_of_maxmiso : {nodes: list, induced_subgraph
 fanout = dict()
 def get_fanout(G):
     for n in G.nodes:
-        fanout[n] = G.out_degree(n)
+        out_deg = G.out_degree(n)
+        fanout[n] = out_deg
     return fanout
 
+fanout_orig = dict()
 
 def gen_mms(G: nx.DiGraph, n, cn):
     global maxmiso
     global fanout
+    global fanout_orig
     if cn not in maxmiso.keys():
         maxmiso[cn] = [cn]
     for p in G.predecessors(n):
-        if fanout[p] == 1:
+        if (fanout[p] == 1):
             maxmiso[cn].append(p)
             gen_mms(G, p, cn)
         else:
-            fanout[p] -= 1
+            if fanout[p] > 1:
+                fanout[p] -= 1
 
 
 def maxmiso_original_recursive(G):
     global maxmiso
     global fanout
+    global fanout_orig
     maxmiso = dict()
     fanout = dict()
-    fanout = get_fanout(G)
+    fanout_orig = dict()
+    fanout_orig = get_fanout(G)
+
     while G.number_of_nodes() > 0:
         for item in G.nodes:
             if G.out_degree(item) > 0:
                 continue
             else:
                 n = item
+        fanout = copy.copy(fanout_orig)
         gen_mms(G, n, n)
         G.remove_nodes_from(maxmiso[n])
+    return maxmiso
+
+
+def miso_convexes_recursive(G):
+    global maxmiso
+    global fanout
+    maxmiso = dict()
+    fanout = dict()
+    fanout = get_fanout(G)
+    for n in G.nodes:
+        gen_mms(G, n, n)
+        #G.remove_nodes_from(maxmiso[n])
     return maxmiso
 
 
