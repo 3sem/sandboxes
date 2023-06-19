@@ -110,6 +110,7 @@ def get_fanout(G):
 
 fanout_orig = dict()
 
+
 def gen_mms(G: nx.DiGraph, n, cn):
     global maxmiso
     global fanout
@@ -122,7 +123,7 @@ def gen_mms(G: nx.DiGraph, n, cn):
             gen_mms(G, p, cn)
         else:
             if fanout[p] > 1:
-                fanout[p] -= 1
+                fanout[p] -= 1 # all of fanouts of picked node should be consumed by the current MAXMISO
 
 
 def maxmiso_original_recursive(G):
