@@ -125,8 +125,25 @@ def gen_mms(G: nx.DiGraph, n, cn, fanout):
             fanout[p] -= 1 # all of fanouts of picked node should be consumed by the current MAXMISO
 
 
+def gen_mms_iteratively(G: nx.DiGraph, n, fanout):
+    global maxmiso
+    stack = [n]
+    if n not in maxmiso.keys():
+        maxmiso[n] = [n]
+    while len(stack) != 0:
+        top = stack.pop()
+        for p in G.predecessors(top):
+            if fanout[p] == 1:
+                maxmiso[n].append(p)
+                stack.append(p)
+                fanout[p] = 0
+            elif fanout[p] == 0:
+                return
+            else:
+                fanout[p] -= 1  # all of fanouts of picked node should be consumed by the current MAXMISO
 
-def maxmiso_original_recursive(G):
+
+def maxmiso_original(G, mode="recursive"):
     global maxmiso
     maxmiso = dict()
     fanout_orig = get_fanout(G)
@@ -138,7 +155,10 @@ def maxmiso_original_recursive(G):
             else:
                 n = item
         fanout = copy.copy(fanout_orig)
-        gen_mms(G, n, n, fanout)
+        if mode == "recursive":
+            gen_mms(G, n, n, fanout)
+        else:
+            gen_mms_iteratively(G, n, fanout)
         G.remove_nodes_from(maxmiso[n])
     return maxmiso
 
@@ -153,6 +173,8 @@ def miso_convexes_recursive(G):
         gen_mms(G, n, n)
         #G.remove_nodes_from(maxmiso[n])
     return maxmiso
+
+
 
 
 def maxmiso_nx_extractor(G):
@@ -340,11 +362,17 @@ def visualize_templates(graphs_: list, save_prefix=None):
 if __name__ == '__main__':
     freq = dict()
     G = testG1()
+    #miso = testGmaxmiso_3reg()
+    #print(maxmiso_nx_extractor(miso))
+
     miso = testGmaxmiso_3reg()
-    print(maxmiso_nx_extractor(miso))
-    miso = testGmaxmiso_3reg()
-    print(maxmiso_original_recursive(miso))
+    miso_orig = copy.deepcopy(miso)
+    res = maxmiso_original(miso, "iterative")
+    for k, v in res.items():
+        res[k] = {"nodes": v, "graph": miso_orig.subgraph(v)}
+    visualize_templates(v["graph"] for k,v in res.items())
     sys.exit(0)
+
     wcc = list(nx.weakly_connected_components(G))
     for i, w in enumerate(wcc):
         subgraph = nx.subgraph(G, w)
