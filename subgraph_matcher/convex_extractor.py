@@ -6,6 +6,8 @@ import matplotlib.pyplot as plt
 import more_itertools
 import itertools
 import copy
+import networkx.algorithms.isomorphism as isomorph
+
 
 def convex_single_src_dst_mining(G: nx.DiGraph, constr: dict, fixed_output=None):
     max_path_len = constr.get("max_path_len", 5)
@@ -175,8 +177,6 @@ def miso_convexes_recursive(G):
     return maxmiso
 
 
-
-
 def maxmiso_nx_extractor(G):
     while G.number_of_nodes() > 0:
         for item in G.nodes:
@@ -277,7 +277,7 @@ def testGmaxmiso_3reg(hop_w=-1):
     g.add_node(3, name="*")
     g.add_node(4, name="*")
     g.add_node(5, name="*")
-    g.add_node(6, name="+")
+    g.add_node(6, name="-")
 
     g.add_node(11, name="+")
     g.add_node(12, name="+")
@@ -362,15 +362,31 @@ def visualize_templates(graphs_: list, save_prefix=None):
 if __name__ == '__main__':
     freq = dict()
     G = testG1()
-    #miso = testGmaxmiso_3reg()
-    #print(maxmiso_nx_extractor(miso))
-
     miso = testGmaxmiso_3reg()
     miso_orig = copy.deepcopy(miso)
     res = maxmiso_original(miso, "iterative")
+
     for k, v in res.items():
-        res[k] = {"nodes": v, "graph": miso_orig.subgraph(v)}
-    visualize_templates(v["graph"] for k,v in res.items())
+        subgraph = miso_orig.subgraph(v)
+        res[k] = {"nodes": v,
+                  "graph": subgraph,
+                  "hash": nx.weisfeiler_lehman_graph_hash(subgraph, node_attr='name'),
+                  "freq": 1}
+    freq = dict()
+    #visualize_templates(v["graph"] for k,v in res.items())
+    for k1, v1 in res.items():
+        for k2, v2 in res.items():
+            if k2 != k1:
+                g1 = v1["graph"]
+                g2 = v2["graph"]
+                g_pair = isomorph.ISMAGS(g1, g2)
+                for sg in g_pair.largest_common_subgraph(): # chck nodes there!
+                    hash = nx.weisfeiler_lehman_graph_hash(subgraph, node_attr='name')
+                    freq_entry = freq.get(hash, {'graph': sg, 'cnt': 0})
+                    freq_entry['cnt'] += 1
+                    freq[hash] = freq_entry
+    print(freq)
+
     sys.exit(0)
 
     wcc = list(nx.weakly_connected_components(G))
@@ -379,8 +395,10 @@ if __name__ == '__main__':
         paths, graphs_list = oneout_templates_mining(subgraph)
         for p in graphs_list:
             phash = nx.weisfeiler_lehman_graph_hash(p, node_attr='name')
+
             entry = freq.get(phash, {'graph': p, 'count': 0})
             entry['count'] += 1
             freq[phash] = entry
+
         #visualize_templates(graphs_list, save_prefix="G"+str(i)+"_")
     visualize_templates([v['graph'] for k, v in freq.items()])
