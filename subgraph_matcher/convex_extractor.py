@@ -337,7 +337,7 @@ def multiout_templates_mining(g: nx.DiGraph):
     return unconn_paths, unconn_graphs_list
 
 
-def visualize_templates(graphs_: list, save_prefix=None):
+def visualize_templates(graphs_: list, need_node_name=False, save_prefix=None):
     for i, g in enumerate(graphs_):
         color_map = []
         for node in g:
@@ -351,12 +351,26 @@ def visualize_templates(graphs_: list, save_prefix=None):
         pos = graphviz_layout(g, prog='dot')
         node_lables = nx.get_node_attributes(g, 'name')
         for k in node_lables.keys():
-            node_lables[k] = str(k) + ' ' + node_lables[k]
+            node_lables[k] = f'''%{k + ' ' if need_node_name else ""}''' + node_lables[k]
 
         nx.draw_networkx(g, pos, node_color=color_map, labels=node_lables, arrows=True)
         plt.show()
         if save_prefix:
             plt.savefig(str(i)+".png")
+
+
+def largest_isomorph_miso_graphs(l:list)->dict:
+    res = dict()
+    for G1 in l:
+        for G2 in l:
+            if G1 != G2:
+                gen = nx.isomorphism.ISMAGS(G1, G2, node_match=nx.isomorphism.categorical_node_match("name", None))
+                for subgraph in gen: # and also, convexity should be checked!
+                    hash = nx.weisfeiler_lehman_graph_hash(subgraph, node_attr="name")
+                    entry = res.get(hash, {"graph", {"graph":subgraph,"count":0}})
+                    entry["count"] += 1
+                    res[hash] = entry
+    return res
 
 
 if __name__ == '__main__':
@@ -379,13 +393,24 @@ if __name__ == '__main__':
             if k2 != k1:
                 g1 = v1["graph"]
                 g2 = v2["graph"]
+                gen = nx.isomorphism.ISMAGS(g1, g2, node_match=nx.isomorphism.categorical_node_match("name", None))
+                for sg in gen.largest_common_subgraph():  # and also, convexity should be checked!
+                    hash = nx.weisfeiler_lehman_graph_hash(v1['graph'].subgraph(list(sg.keys())), node_attr="name")
+                    freq_entry = freq.get(hash, {'graph': sg, 'cnt': 0})
+                    freq_entry['cnt'] += 1
+                    freq[hash] = freq_entry
+                '''
                 g_pair = isomorph.ISMAGS(g1, g2)
                 for sg in g_pair.largest_common_subgraph(): # chck nodes there!
                     hash = nx.weisfeiler_lehman_graph_hash(subgraph, node_attr='name')
                     freq_entry = freq.get(hash, {'graph': sg, 'cnt': 0})
                     freq_entry['cnt'] += 1
                     freq[hash] = freq_entry
+                '''
     print(freq)
+    visualize_templates([miso_orig])
+    visualize_templates(miso_orig.subgraph(list(v["graph"].keys())) for k,v in freq.items())
+
 
     sys.exit(0)
 
@@ -401,4 +426,4 @@ if __name__ == '__main__':
             freq[phash] = entry
 
         #visualize_templates(graphs_list, save_prefix="G"+str(i)+"_")
-    visualize_templates([v['graph'] for k, v in freq.items()])
+    visualize_templates([v['graph'] for k, v in freq.items()], need_node_num=False)
