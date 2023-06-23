@@ -277,21 +277,21 @@ def testGmaxmiso_3reg(hop_w=-1):
     g.add_node(3, name="*")
     g.add_node(4, name="*")
     g.add_node(5, name="*")
-    g.add_node(6, name="-")
+    g.add_node(6, name="/")
 
     g.add_node(11, name="+")
     g.add_node(12, name="+")
     g.add_node(13, name="*")
     g.add_node(14, name="*")
     g.add_node(15, name="*")
-    g.add_node(16, name="+")
+    g.add_node(16, name="/")
 
-    g.add_node(21, name="+")
+    g.add_node(21, name="-")
     g.add_node(22, name="+")
     g.add_node(23, name="*")
     g.add_node(24, name="*")
     g.add_node(25, name="*")
-    g.add_node(26, name="+")
+    g.add_node(26, name="/")
 
     g.add_edge(1, 4, hop=hop_w)
     g.add_edge(2, 4, hop=hop_w)
@@ -351,7 +351,7 @@ def visualize_templates(graphs_: list, need_node_name=False, save_prefix=None):
         pos = graphviz_layout(g, prog='dot')
         node_lables = nx.get_node_attributes(g, 'name')
         for k in node_lables.keys():
-            node_lables[k] = f'''%{k + ' ' if need_node_name else ""}''' + node_lables[k]
+            node_lables[k] = f'''{k + ' ' if need_node_name else ""}''' + node_lables[k]
 
         nx.draw_networkx(g, pos, node_color=color_map, labels=node_lables, arrows=True)
         plt.show()
