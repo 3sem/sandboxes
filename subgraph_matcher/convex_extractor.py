@@ -373,13 +373,16 @@ def largest_isomorph_miso_graphs(l:list)->dict:
                     res[hash] = entry
     return res
 
+
 def flatten(l):
     return [item for sublist in l for item in sublist]
 
 
-def miso_conv_checker(G, nodes):
+def conv_checker(G, nodes, out=None):
     subgraph = G.subgraph(nodes)
-    out = [n for n in nodes if subgraph.out_degree(n) == 0]
+    if not out:
+        out = [n for n in nodes if subgraph.out_degree(n) == 0]
+
     asp = list()
     for n in nodes:
         if n == out:
@@ -391,6 +394,7 @@ def miso_conv_checker(G, nodes):
         return True
     else:
         return False
+
 
 if __name__ == '__main__':
     freq = dict()
@@ -416,10 +420,7 @@ if __name__ == '__main__':
                 g2 = v2["graph"]
                 gen = nx.isomorphism.ISMAGS(g1, g2, node_match=nx.isomorphism.categorical_node_match("name", None))
                 for sg in gen.largest_common_subgraph():
-                    # convexity should be checked!
-
-                    nodes_to_check = [list(sg.keys()), [v for _,v in sg.items()]]
-                    if miso_conv_checker(g1, nodes_to_check[0]) and miso_conv_checker(g2, nodes_to_check[1]):
+                    if conv_checker(g1, list(sg.keys())) and conv_checker(g2, [v for _, v in sg.items()]):
                         hash = nx.weisfeiler_lehman_graph_hash(v1['graph'].subgraph(list(sg.keys())), node_attr="name")
                         freq_entry = freq.get(hash, {'graph': sg, 'cnt': 0, 'node_subsets': [list(sg.keys())]})
                         freq_entry['cnt'] += 1
@@ -429,8 +430,13 @@ if __name__ == '__main__':
         result = []
         [result.append(x) for x in v['node_subsets'] if x not in result]
         v['node_subsets'] = result
-
+    # mix miso to mimo on overlapped parts
+    for k, v in freq.items():
+        for x in v['node_subsets']:
+            for K,V in freq.items():
+                pass # do
     pprint.pprint(freq)
+
     visualize_templates([miso_orig])
     visualize_templates(miso_orig.subgraph(list(v["graph"].keys())) for k,v in freq.items())
 
