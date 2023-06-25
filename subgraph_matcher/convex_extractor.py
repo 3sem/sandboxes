@@ -434,6 +434,15 @@ if __name__ == '__main__':
     for k, v in freq.items():
         for x in v['node_subsets']:
             for K,V in freq.items():
+                for X in V['node_subsets']:
+                    if X == x:
+                        continue
+                    else:
+                        SX = set(X)
+                        sx = set(x)
+                        if len(set(SX).intersection(set(sx)))>0:
+                            joined_set = SX.union(sx)
+                            print(joined_set)
                 pass # do
     pprint.pprint(freq)
 
