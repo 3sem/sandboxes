@@ -1,5 +1,5 @@
 import sys
-
+import numpy as np
 import networkx as nx
 from networkx.drawing.nx_agraph import graphviz_layout
 import matplotlib.pyplot as plt
@@ -386,6 +386,7 @@ if __name__ == '__main__':
                   "graph": subgraph,
                   "hash": nx.weisfeiler_lehman_graph_hash(subgraph, node_attr='name'),
                   "freq": 1}
+
     freq = dict()
     #visualize_templates(v["graph"] for k,v in res.items())
     for k1, v1 in res.items():
@@ -396,24 +397,22 @@ if __name__ == '__main__':
                 gen = nx.isomorphism.ISMAGS(g1, g2, node_match=nx.isomorphism.categorical_node_match("name", None))
                 for sg in gen.largest_common_subgraph():  # and also, convexity should be checked!
                     hash = nx.weisfeiler_lehman_graph_hash(v1['graph'].subgraph(list(sg.keys())), node_attr="name")
-                    freq_entry = freq.get(hash, {'graph': sg, 'cnt': 0})
+                    freq_entry = freq.get(hash, {'graph': sg, 'cnt': 0, 'node_subsets': [list(sg.keys())]})
                     freq_entry['cnt'] += 1
+                    freq_entry['node_subsets'].append([v for _, v in sg.items()])
                     freq[hash] = freq_entry
-                '''
-                g_pair = isomorph.ISMAGS(g1, g2)
-                for sg in g_pair.largest_common_subgraph(): # chck nodes there!
-                    hash = nx.weisfeiler_lehman_graph_hash(subgraph, node_attr='name')
-                    freq_entry = freq.get(hash, {'graph': sg, 'cnt': 0})
-                    freq_entry['cnt'] += 1
-                    freq[hash] = freq_entry
-                '''
+    for k, v in freq.items():
+        result = []
+        [result.append(x) for x in v['node_subsets'] if x not in result]
+        v['node_subsets'] = result
+
     print(freq)
     visualize_templates([miso_orig])
     visualize_templates(miso_orig.subgraph(list(v["graph"].keys())) for k,v in freq.items())
 
 
     sys.exit(0)
-
+    '''
     wcc = list(nx.weakly_connected_components(G))
     for i, w in enumerate(wcc):
         subgraph = nx.subgraph(G, w)
@@ -426,4 +425,5 @@ if __name__ == '__main__':
             freq[phash] = entry
 
         #visualize_templates(graphs_list, save_prefix="G"+str(i)+"_")
-    visualize_templates([v['graph'] for k, v in freq.items()], need_node_num=False)
+    '''
+    # visualize_templates([v['graph'] for k, v in freq.items()], need_node_num=False)
