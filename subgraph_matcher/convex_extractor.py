@@ -1,11 +1,12 @@
 import sys
+import pprint
+import more_itertools
+import itertools
+import copy
 import numpy as np
 import networkx as nx
 from networkx.drawing.nx_agraph import graphviz_layout
 import matplotlib.pyplot as plt
-import more_itertools
-import itertools
-import copy
 import networkx.algorithms.isomorphism as isomorph
 
 
@@ -372,6 +373,24 @@ def largest_isomorph_miso_graphs(l:list)->dict:
                     res[hash] = entry
     return res
 
+def flatten(l):
+    return [item for sublist in l for item in sublist]
+
+
+def miso_conv_checker(G, nodes):
+    subgraph = G.subgraph(nodes)
+    out = [n for n in nodes if subgraph.out_degree(n) == 0]
+    asp = list()
+    for n in nodes:
+        if n == out:
+            continue
+        asp.extend(list(nx.all_simple_paths(G, n, out)))
+    asp = flatten(asp)
+    asp_set = set(asp)
+    if asp_set == set(nodes):
+        return True
+    else:
+        return False
 
 if __name__ == '__main__':
     freq = dict()
@@ -383,6 +402,7 @@ if __name__ == '__main__':
     for k, v in res.items():
         subgraph = miso_orig.subgraph(v)
         res[k] = {"nodes": v,
+                  "output": k,
                   "graph": subgraph,
                   "hash": nx.weisfeiler_lehman_graph_hash(subgraph, node_attr='name'),
                   "freq": 1}
@@ -395,18 +415,22 @@ if __name__ == '__main__':
                 g1 = v1["graph"]
                 g2 = v2["graph"]
                 gen = nx.isomorphism.ISMAGS(g1, g2, node_match=nx.isomorphism.categorical_node_match("name", None))
-                for sg in gen.largest_common_subgraph():  # and also, convexity should be checked!
-                    hash = nx.weisfeiler_lehman_graph_hash(v1['graph'].subgraph(list(sg.keys())), node_attr="name")
-                    freq_entry = freq.get(hash, {'graph': sg, 'cnt': 0, 'node_subsets': [list(sg.keys())]})
-                    freq_entry['cnt'] += 1
-                    freq_entry['node_subsets'].append([v for _, v in sg.items()])
-                    freq[hash] = freq_entry
+                for sg in gen.largest_common_subgraph():
+                    # convexity should be checked!
+
+                    nodes_to_check = [list(sg.keys()), [v for _,v in sg.items()]]
+                    if miso_conv_checker(g1, nodes_to_check[0]) and miso_conv_checker(g2, nodes_to_check[1]):
+                        hash = nx.weisfeiler_lehman_graph_hash(v1['graph'].subgraph(list(sg.keys())), node_attr="name")
+                        freq_entry = freq.get(hash, {'graph': sg, 'cnt': 0, 'node_subsets': [list(sg.keys())]})
+                        freq_entry['cnt'] += 1
+                        freq_entry['node_subsets'].append([v for _, v in sg.items()])
+                        freq[hash] = freq_entry
     for k, v in freq.items():
         result = []
         [result.append(x) for x in v['node_subsets'] if x not in result]
         v['node_subsets'] = result
 
-    print(freq)
+    pprint.pprint(freq)
     visualize_templates([miso_orig])
     visualize_templates(miso_orig.subgraph(list(v["graph"].keys())) for k,v in freq.items())
 
