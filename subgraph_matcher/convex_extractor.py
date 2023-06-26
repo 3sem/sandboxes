@@ -447,22 +447,37 @@ if __name__ == '__main__':
 
     res = prepare_maxmiso_stat(res)
     freq = search_isomophic_subgraphs(res, freq)
+
     miso = copy.deepcopy(miso_orig)
-    # remove all of max isomorfic mimo from original graph:
-    for k, v in freq.items():
-        for x in v['node_subsets']:
-            miso.remove_nodes_from(x)
 
-    wcc = nx.weakly_connected_components(miso) # lasts of pattern candidates should be also weakly one-connected
-    for subg in wcc:
-        item = nx.DiGraph(nx.subgraph(miso, subg))
-        r = maxmiso_original(item, "iterative")
 
-        r = prepare_maxmiso_stat(r)
+    while len(miso.nodes) > 0:
+        # remove all of max isomorfic mimo from original graph:
+        miso_prev_iter_nodes = set(copy.copy(miso.nodes()))
+        for k, v in freq.items():
+            for x in v['node_subsets']:
+                miso.remove_nodes_from(x)
 
-        freq = search_isomophic_subgraphs(r, freq)
+        wcc = nx.weakly_connected_components(miso) # lasts of pattern candidates should be also weakly one-connected
+        for subg in wcc:
+            item = nx.DiGraph(nx.subgraph(miso, subg))
+            r = maxmiso_original(item, "iterative")
+            r = prepare_maxmiso_stat(r)
+            freq = search_isomophic_subgraphs(r, freq)
 
+        if len(miso_prev_iter_nodes - set(miso.nodes)) == 0:
+            for K,V in r.items():
+                hash = nx.weisfeiler_lehman_graph_hash(V['graph'], node_attr="name")
+                freq_entry = freq.get(hash, {'graph': dict.fromkeys(V['nodes'], 0), 'cnt': 0, 'node_subsets': [V['nodes']]})
+                freq_entry['cnt'] += 1
+                freq_entry['node_subsets'].append(V['nodes'])
+                freq_entry['type'] = "uncovered"
+                freq[hash] = freq_entry
+            break
+
+    nx.weakly_connected_components(miso)
     pprint.pprint(freq)
+
 
     visualize_templates([miso_orig])
     visualize_templates(miso_orig.subgraph(list(v["graph"].keys())) for k,v in freq.items())
