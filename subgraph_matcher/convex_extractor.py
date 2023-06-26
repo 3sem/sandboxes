@@ -287,6 +287,9 @@ def testGmaxmiso_3reg(hop_w=-1):
     g.add_node(15, name="*")
     g.add_node(16, name="/")
 
+    g.add_node(331, name="%")
+    g.add_node(31, name="-")
+    g.add_node(221, name="%")
     g.add_node(21, name="-")
     g.add_node(22, name="+")
     g.add_node(23, name="*")
@@ -314,6 +317,9 @@ def testGmaxmiso_3reg(hop_w=-1):
     g.add_edge(23, 25, hop=hop_w)
     g.add_edge(24, 26, hop=hop_w)
     g.add_edge(25, 26, hop=hop_w)
+    g.add_edge(221, 21, hop=hop_w)
+
+    g.add_edge(331, 31, hop=hop_w)
 
     g.add_edge(6, 13, hop=hop_w)
     g.add_edge(6, 21, hop=hop_w)
@@ -403,47 +409,57 @@ if __name__ == '__main__':
     miso_orig = copy.deepcopy(miso)
     res = maxmiso_original(miso, "iterative")
 
-    for k, v in res.items():
-        subgraph = miso_orig.subgraph(v)
-        res[k] = {"nodes": v,
+    def prepare_maxmiso_stat(_res):
+        for k, _item in _res.items():
+            __item = _item if type(_item).__name__ == 'list' else _item['nodes']
+            subgraph = miso_orig.subgraph(__item)
+            _res[k] = {"nodes": __item,
                   "output": k,
                   "graph": subgraph,
                   "hash": nx.weisfeiler_lehman_graph_hash(subgraph, node_attr='name'),
                   "freq": 1}
+        return _res
 
     freq = dict()
-    #visualize_templates(v["graph"] for k,v in res.items())
-    for k1, v1 in res.items():
-        for k2, v2 in res.items():
-            if k2 != k1:
-                g1 = v1["graph"]
-                g2 = v2["graph"]
-                gen = nx.isomorphism.ISMAGS(g1, g2, node_match=nx.isomorphism.categorical_node_match("name", None))
-                for sg in gen.largest_common_subgraph():
-                    if conv_checker(g1, list(sg.keys())) and conv_checker(g2, [v for _, v in sg.items()]):
-                        hash = nx.weisfeiler_lehman_graph_hash(v1['graph'].subgraph(list(sg.keys())), node_attr="name")
-                        freq_entry = freq.get(hash, {'graph': sg, 'cnt': 0, 'node_subsets': [list(sg.keys())]})
-                        freq_entry['cnt'] += 1
-                        freq_entry['node_subsets'].append([v for _, v in sg.items()])
-                        freq[hash] = freq_entry
-    for k, v in freq.items():
-        result = []
-        [result.append(x) for x in v['node_subsets'] if x not in result]
-        v['node_subsets'] = result
-    # mix miso to mimo on overlapped parts
+
+    def search_isomophic_subgraphs(res, freq):
+        for k1, v1 in res.items():
+            for k2, v2 in res.items():
+                if k2 != k1:
+                    g1 = v1["graph"]
+                    g2 = v2["graph"]
+                    gen = nx.isomorphism.ISMAGS(g1, g2, node_match=nx.isomorphism.categorical_node_match("name", None))
+                    for sg in gen.largest_common_subgraph():
+                        if conv_checker(g1, list(sg.keys())) and conv_checker(g2, [v for _, v in sg.items()]):
+                            hash = nx.weisfeiler_lehman_graph_hash(v1['graph'].subgraph(list(sg.keys())), node_attr="name")
+                            freq_entry = freq.get(hash, {'graph': sg, 'cnt': 0, 'node_subsets': [list(sg.keys())]})
+                            freq_entry['cnt'] += 1
+                            freq_entry['node_subsets'].append([v for _, v in sg.items()])
+                            freq[hash] = freq_entry
+
+        for k, v in freq.items():
+            result = []
+            [result.append(x) for x in v['node_subsets'] if x not in result]
+            v['node_subsets'] = result
+        return freq
+
+    res = prepare_maxmiso_stat(res)
+    freq = search_isomophic_subgraphs(res, freq)
+    miso = copy.deepcopy(miso_orig)
+    # remove all of max isomorfic mimo from original graph:
     for k, v in freq.items():
         for x in v['node_subsets']:
-            for K,V in freq.items():
-                for X in V['node_subsets']:
-                    if X == x:
-                        continue
-                    else:
-                        SX = set(X)
-                        sx = set(x)
-                        if len(set(SX).intersection(set(sx)))>0:
-                            joined_set = SX.union(sx)
-                            print(joined_set)
-                pass # do
+            miso.remove_nodes_from(x)
+
+    wcc = nx.weakly_connected_components(miso) # lasts of pattern candidates should be also weakly one-connected
+    for subg in wcc:
+        item = nx.DiGraph(nx.subgraph(miso, subg))
+        r = maxmiso_original(item, "iterative")
+
+        r = prepare_maxmiso_stat(r)
+
+        freq = search_isomophic_subgraphs(r, freq)
+
     pprint.pprint(freq)
 
     visualize_templates([miso_orig])
