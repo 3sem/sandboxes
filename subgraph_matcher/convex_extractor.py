@@ -436,7 +436,7 @@ if __name__ == '__main__':
                             hash = nx.weisfeiler_lehman_graph_hash(v1['graph'].subgraph(list(sg.keys())), node_attr="name")
                             freq_entry = freq.get(hash, {'graph': sg, 'cnt': 0, 'node_subsets': [list(sg.keys())]})
                             freq_entry['cnt'] += 1
-                            freq_entry['node_subsets'].append([v for _, v in sg.items()])
+                            freq_entry['node_subsets'].append(sorted([v for _, v in sg.items()]))
                             freq[hash] = freq_entry
 
         for k, v in freq.items():
@@ -449,7 +449,6 @@ if __name__ == '__main__':
     freq = search_isomophic_subgraphs(res, freq)
 
     miso = copy.deepcopy(miso_orig)
-
 
     while len(miso.nodes) > 0:
         # remove all of max isomorfic mimo from original graph:
@@ -475,7 +474,13 @@ if __name__ == '__main__':
                 freq[hash] = freq_entry
             break
 
-    nx.weakly_connected_components(miso)
+
+
+    # update frequencies
+    for k,v in freq.items():
+        v['node_subsets'] = list(k for k, _ in itertools.groupby(sorted(v['node_subsets'])))
+        v['cnt'] =  len(v['node_subsets'])
+
     pprint.pprint(freq)
 
 
