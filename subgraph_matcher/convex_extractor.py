@@ -287,6 +287,7 @@ def testGmaxmiso_3reg(hop_w=-1):
     g.add_node(15, name="*")
     g.add_node(16, name="/")
 
+    g.add_node(332, name="/")
     g.add_node(331, name="%")
     g.add_node(31, name="-")
     g.add_node(221, name="%")
@@ -320,6 +321,7 @@ def testGmaxmiso_3reg(hop_w=-1):
     g.add_edge(221, 21, hop=hop_w)
 
     g.add_edge(331, 31, hop=hop_w)
+    g.add_edge(332, 331, hop=hop_w)
 
     g.add_edge(6, 13, hop=hop_w)
     g.add_edge(6, 21, hop=hop_w)
