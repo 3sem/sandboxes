@@ -2,3 +2,5 @@
 on Computer-Aided Design of Integrated Circuits and Systems
 
 2. https://cyberleninka.ru/article/n/iterativnyy-podhod-s-ispolzovaniem-kompilyatora-dlya-sinteza-i-modelirovaniya-problemno-orientirovannogo-nabora-komand
+
+3. https://inria.hal.science/hal-02884025/document
