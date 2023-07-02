@@ -1,0 +1,4 @@
+1. Pozzi L., Atasu K., Ienne P. Exact and approximate algorithms for the extension of embedded processor instruction sets //IEEE Transactions
+on Computer-Aided Design of Integrated Circuits and Systems
+
+2. https://cyberleninka.ru/article/n/iterativnyy-podhod-s-ispolzovaniem-kompilyatora-dlya-sinteza-i-modelirovaniya-problemno-orientirovannogo-nabora-komand
