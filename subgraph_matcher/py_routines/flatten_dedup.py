@@ -1,3 +1,12 @@
+def get_layers(G, start_nodes):
+    levels = dict()
+    for start in start_nodes:
+        for idx, level in enumerate(nx.bfs_layers(G, start)):
+            print(level)
+            levels.update({x:idx for x in level})
+    return levels
+
+
 test = [[1,2],[3,4],[1,2]]
 
 # flatten also suitable for all iterables in list, not only for lists
