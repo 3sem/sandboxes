@@ -8,15 +8,21 @@
   [Repo](https://github.com/3sem/cot_contrib "Repo")
   - [x] GCC
     - [x] Standalone
+  - [x] GCC PHO plugin
+    - [ ] Standalone
+    - [ ] CompilerGym-integrated  
   - [x] LLVM
     - [x] Standalone
-    - [x] CompilerGym-based
+    - [x] CompilerGym-integrated
     
  - [x] Multistep / passes subsequences mining
     - [ ] ODG mining techniques
     - [ ] Pareto-optimum search
    
  - [x] Multi-criterial search
+    - [ ] bin size reduction under const performance
+      - [ ] LLVM
+      - [X] GCC    
     
  - [ ] Phase-ordering in GCC implementation
  
