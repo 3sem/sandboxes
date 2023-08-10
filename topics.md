@@ -8,9 +8,9 @@
   [Repo](https://github.com/3sem/cot_contrib "Repo")
   - [x] GCC
     - [x] Standalone
-  - [x] GCC PHO plugin
-    - [ ] Standalone
-    - [ ] CompilerGym-integrated  
+  - [x] GCC PHO plugin development & experiments
+    - [x] Standalone
+    - [x] CompilerGym-integrated  
   - [x] LLVM
     - [x] Standalone
     - [x] CompilerGym-integrated
@@ -23,8 +23,6 @@
     - [ ] bin size reduction under const performance
       - [ ] LLVM
       - [X] GCC    
-    
- - [ ] Phase-ordering in GCC implementation
  
  - [x] Program characterization for ML in compilers
    - [x] IR2Vec D1 cache performance modeling [Suspended]
