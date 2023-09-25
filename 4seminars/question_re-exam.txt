@@ -1,0 +1,64 @@
+I. Дебильник по C++:
+
+1. Модифицировать код так, чтобы компилятор выдал ошибку полиморфности между классами
+
+#include <stdio.h>
+
+struct Base { 
+    virtual int f() = 0;
+};
+
+struct Derived : Base {
+    int f();
+};
+
+int Derived::f() {
+    printf("a\n");
+    return 0;
+}
+
+int main() {
+  Derived d; 
+  Base *b = &d;
+  dynamic_cast<Derived*>(b); // Mush be invalid
+}
+
+2. Напишите класс FILE, который перед загрузкой файла способен проверить существование файла по переданному в std::string& пути, не создавая объект.
+
+3. Напишите класс с кастомным конструктором и деструктором, передайте его в метод другого объекта, также обладающего кастомным конструктором и деструктором, минимизировав при этом количество создаваемых объектов
+
+4. Напишите иерархию классов с абстрактным классом в качестве интерфейса к дочерним. Протестируйте передачей в функцию f. f должна уметь работать с объектом любого класса из иерархии.
+
+5. В каких случаях reinterpret_cast приведёт к нарушению strict_aliasing? Приведите практический пример, продемонстрировав на компиляторе.
+
+II. Паттерны
+
+6. Напишите синглетон на C++
+
+7. Напишите фабрику на C++, модифицируйте до абстрактной фабрики.
+
+III. Алгоритмы
+
+8. Напишите функцию f поиска 3 самых длинных слов в строке. Если на роль самых длинных выступает более одного кандидата равной длины -- выводите любое.
+В качестве тестовой обёртки можете использовать данный код:
+
+#include <iostream>
+#include <string>
+#include <vector>
+#include <set>
+
+void f(const std::string& input, std::vector<std::string>& retVal, 
+       unsigned numOfWords, const std::set<char>& separators) {
+    /* put your implementation there */
+    return;
+}
+
+int main() {
+    std::string test_text("this is\nthe; test");
+    std::vector<std::string> result;
+    std::set<char> delimiters = {';', '\n', '\t', ' '};
+    f(test_text, result, 3, delimiters);
+    for (auto i:result)
+        std::cout << i <<std::endl;
+    return 0;
+}
