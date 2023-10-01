@@ -1,3 +1,5 @@
+Let M is an LL(1) parsing table (|N|x(|\Sigma|+1)), initialized with \$ column 
+
 for each rule (S -> A):
     for each terminal a in First(A):
         add (S -> A) to M[S, a]
