@@ -1,0 +1,7 @@
+for each rule (S -> A):
+    for each terminal a in First(A):
+        add (S -> A) to M[S, a]
+
+    if First(A) contains empty:
+        for each terminal b in Follow(S):
+            add (S -> A) to M[S, b]
