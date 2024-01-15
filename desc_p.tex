@@ -1,0 +1,861 @@
+\documentclass[10pt]{article}         %% What type of document you're writing.
+\usepackage{amsmath,amsfonts,amssymb}   %% AMS mathematics macros
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\usepackage{amsthm}
+\usepackage{ucs} 
+\usepackage[utf8x]{inputenc} % Включаем поддержку UTF8
+\usepackage{multicol}
+\usepackage[russian]{babel}
+
+\newtheorem{definition}{Опр.}
+\newtheorem{example}{Пример}
+\newtheorem{lemm}{Лемма}
+\newtheorem{theorem}{Теорема}
+\algdef{SE}[DOWHILE]{Do}{doWhile}{\algorithmicdo}[1]{\algorithmicwhile\ #1}%
+
+%% Title Information.
+
+\title{Алгоритмы нисходящего разбора}
+\author{Ефанов Н.Н., к.ф.-м.н., доцент КИВМ МФТИ}
+%% \date{2 July 2004}           %% By default, LaTeX uses the current date
+
+%%%%% The Document
+
+\begin{document}
+	
+	\maketitle
+	
+	%\chapter
+	\textbf{Алгоритмы на основе нисходящего анализа}
+	
+	\section{Предварительные определения и утверждения}
+	\begin{definition}
+		Говорят, что грамматика содержит левую рекурсию, если в ней существует вывод вида $A \to^* A\alpha$
+	\end{definition}
+	\begin{definition}
+		Грамматика называется однозначной, если у каждого слова имеется не более одного дерева разбора в этой грамматике.
+	\end{definition}
+	\begin{definition}
+		Левым порождением, или левосторонним выводом слова $\omega$
+		называется такой вывод $\omega$, в котором каждая последующая строка получена из предыдущей заменой самого левого встречающегося в строке нетерминала по одному из правил. Символически, левое порождение обозначается как $\to^{*}_{lm}$, а любой его шаг --- как $\to_{lm}$.
+	\end{definition}
+	
+	\begin{lemm}
+	Пусть	$G = \langle \Sigma, N, S, P \rangle$ — КС-грамматика. Предположим, что существует дерево разбора с корнем, отмеченным $A$, и кроной  $\omega \in \Sigma^{*}$. Тогда в грамматике $G$ существует левое порождение $A \to^{*}_{lm} \omega$
+	\end{lemm}
+	\textbf{Доказательство} производится индукцией по высоте дерева.
+	\begin{theorem}
+		Для каждой грамматики $G = \langle \Sigma, N, S, P \rangle$ и $\omega \in \Sigma^{*}$, цепочка $\omega$ имеет два разных дерева разбора тогда и только тогда, когда $\omega$ имеет два разных левых порождения из $P$.
+	\end{theorem}
+	\textbf{Доказательство.}
+	\\
+	($\Rightarrow$) Необходимость следует из Леммы 1.
+	\\
+	($\Leftarrow$) Достаточность доказывается от противного.
+	
+	\section{Идеология}
+	Нисходящий синтаксический анализ идеологически можно рассматривать как задачу поиска левого порождения входной строки, либо, что эквивалентно, как процесс построения дерева разбора добавлением узлов в прямом порядке обхода в глубину, начиная с корня. 
+
+	
+	
+	Для грамматики $G = \langle \Sigma, N, S, P \rangle$ огранизация нисходящего анализа выглядит следующим образом: анализатор, разбирающий входную строку $w$, в каждый момент работы содержит в своей памяти пару $(\alpha, v)$, где $v$ -- ещё не прочитанная часть входной строки. Анализатор пытается разобрать $v$ как конкатенацию $\alpha=X_1\dots{X_l}$,где $l \geq{0}, X_1,\dots{,X_l} \in \Sigma\cup{N}$ --- последовательность символов, хранящаяся на стеке так, что $X_1$ лежит на вершине. На каждом шаге ключевым действием является определение продукции, применяемой для раскрытия соответствующего нетерминала. Когда продукция выбрана, следует произвести проверку соответствия  входной строки и терминальных символов правой части продукции, и выполнить дальнейшие шаги для её нетерминальных символов.
+	\section{Рекурсивный спуск}
+	
+	Идея рекурсивного спуска основана на использовании стека вызовов программы в качестве стека анализатора следующим образом:
+	
+	\begin{itemize}
+		\item Для каждого нетерминала программируется функция, принимающая необработанный остаток строки и возвращающая пару: результат вывода префикса данной строки из соответствующего нетерминала (выводится/не выводится) и новый необработанный остаток строки.
+		\item Каждая функция реализует обработку цепочки согласно правым частям правил для соответствующих нетерминалов: считывание символа ввода при обработке терминального символа, вызов соответствующей функции при обработке нетерминального.
+	\end{itemize}
+	
+	У данного подхода есть два ограничения:
+	\begin{enumerate}
+		\item Неприменим для грамматик, содержащих левую рекурсию. Иначе анализатор может зациклиться.
+		\item Шаги должны быть однозначными. Иначе нет возможности детерминированно выбрать конкретную функцию для вызова в некоторых ситуациях.
+	\end{enumerate}
+	
+	Классически, рекурсивному спуску подлежат языки, задаваемые особым подклассом детерминированных КС-грамматик, --- классом LL(k) грамматик\footnote{на практике это ограничение может быть ослаблено различными ухищрениями, вроде откатов и пр.}. Данные грамматики обсуждаются в разделе о LL(k)-алгоритме синтаксического анализе. 
+	
+	Приведём общий вид функции обработки $funcA$ нетерминала $A$, символически обозначая считывание символа из входного потока $s$, моделируемого объектом класса строки, реализующего метод $s.scan$, который возвращает терминальный символ и модифицирует $s$ так, что в нём после вызова $c=s.scan()$ остаток строки, расположенный за $c$. Если возвращаеммое значение самой первой в стеке вызовов функции  --- пара вида \textit{(True, [])}, то разбор завершился успехом. Временная сложность алгоритма от длины строки $n$ --- $O(n)$, так как строка сканируется только один раз.
+	
+	\begin{algorithm}[tbh]\label{alg:RD}
+		\caption{$funcA(s: str)\rightarrow{(status: bool, substr: str)}$}\label{alg:rd1}
+		\begin{algorithmic}
+			\If{$len(s)=0$}
+			\State $return (True,w)$
+			\EndIf
+			\State Текущая продукция: $A \to {X_1X_2\dots{X_k}}$
+			\For{$i \in [1,k]$}
+			\If{$X_i \in N$}
+			\State $res, s \gets funcX_i(s)$
+			\If{$res = False$}
+			\State {$return\ (False, s)$}
+			\EndIf
+			
+			\ElsIf{$X_i \in \Sigma^* \And  X_i=s.scan()$}
+			\If{$i=k$}
+			\State {$return\ (True, [])$}
+			\Else
+			\State $continue$
+			\EndIf
+			\Else
+			\State {$return\ (False, s)$}
+			\EndIf
+			\EndFor
+			
+			
+			
+		\end{algorithmic}
+	\end{algorithm}
+	
+	\begin{example}
+		Разбор слова $aabb$ в грамматике $S \rightarrow aSbS \mid \varepsilon$ рекурсивным спуском. Пусть в начале функция $S$ для стартового нетерминала вызывается из функции $main$.
+		
+		\begin{enumerate}
+			
+			\item Вызов S(aabb): сопоставление $S \rightarrow \textbf{a}SbS$ и $\textbf{a}abb$
+			
+			\begin{tabular}[c]{ |c| } 
+				\\ \hline
+				S \\ \hline
+				main \\ \hline
+			\end{tabular}  
+			\qquad  \qquad \qquad  \qquad входное слово: \,
+			\begin{tabular}[c]{ |c|c|c|c|c| } 
+				\hline
+				\textbf{a} & a & b & b \\ \hline
+			\end{tabular}
+
+			
+			\item Вызов S(abb): сопоставление $S \rightarrow \textbf{a}SbS$ и $\textbf{a}bb$
+			
+			\begin{tabular}[c]{ |c| } 
+				\\ \hline
+				S \\ \hline
+				S \\ \hline
+				main \\ \hline
+			\end{tabular}  
+			\qquad  \qquad \qquad  \qquad входное слово: \,
+			\begin{tabular}[c]{ |c|c|c|c|c| } 
+				\hline
+				a & \textbf{a} & b & b \\ \hline
+			\end{tabular}			
+			
+			\item Вызов S(bb): $S \rightarrow \varepsilon$
+			
+			\begin{tabular}[c]{ |c| } 
+				\\ \hline
+				S \\ \hline
+				S \\ \hline
+				S \\ \hline
+				main \\ \hline
+			\end{tabular}  
+			\qquad  \qquad \qquad  \qquad входное слово: \,
+			\begin{tabular}[c]{ |c|c|c|c|c| } 
+				\hline
+				a & \textbf{a} & b & b \\ \hline
+			\end{tabular}
+			
+			\item Вызов S(abb): сопоставление $S \rightarrow aS\textbf{b}S$ и $a\textbf{b}b$
+			
+			\begin{tabular}[c]{ |c| } 
+				\\ \hline
+				S \\ \hline
+				S \\ \hline
+				main \\ \hline
+			\end{tabular}  
+			\qquad  \qquad \qquad  \qquad входное слово: \,
+			\begin{tabular}[c]{ |c|c|c|c|c| } 
+				\hline
+				a & a & \textbf{b} & b \\ \hline
+			\end{tabular}
+		
+		\item Вызов S(b): $S \rightarrow \varepsilon$
+		
+		\begin{tabular}[c]{ |c| } 
+			\\ \hline
+			S \\ \hline
+			S \\ \hline
+			S \\ \hline
+			main \\ \hline
+		\end{tabular}  
+		\qquad  \qquad \qquad  \qquad входное слово: \,
+		\begin{tabular}[c]{ |c|c|c|c|c| } 
+			\hline
+			a & a & \textbf{b} & b \\ \hline
+		\end{tabular}
+		
+		\item Вызов S(aabb): сопоставление $S \rightarrow aS\textbf{b}S$ и $aab\textbf{b}$
+		
+		\begin{tabular}[c]{ |c| } 
+			\\ \hline
+			S \\ \hline
+			main \\ \hline
+		\end{tabular}  
+		\qquad  \qquad \qquad  \qquad входное слово: \,
+		\begin{tabular}[c]{ |c|c|c|c|c| } 
+			\hline
+			a & a & b & \textbf{b} \\ \hline
+		\end{tabular}
+		
+		\item Вызов S($\varepsilon$): $S \rightarrow \varepsilon$
+		
+		\begin{tabular}[c]{ |c| } 
+			\\ \hline
+			S \\ \hline
+			S \\ \hline
+			main \\ \hline
+		\end{tabular}  
+		\qquad  \qquad \qquad  \qquad входное слово: \,
+		\begin{tabular}[c]{ |c|c|c|c|c| } 
+			\hline
+			a & a & b & b \\ \hline
+		\end{tabular}
+		
+		\item Вызов S(aabb): разобрана вся строка, возврат управления в main
+				
+		\begin{tabular}[c]{ |c| } 
+			\\ \hline
+			S \\ \hline
+			main \\ \hline
+		\end{tabular}  
+		
+		\end{enumerate}
+	\end{example}
+	
+	
+	Приведённый в листинге вариант реализации рекурсивного спуска является безоткатным: в случае ошибки происходит возврат статуса $False$ и остатка необработанной строки. Тем не менее, в общем случае (и зачастую на практике так и есть), рекурсивный спуск может потребовать отката по строке, с возвращением уже прочитанных символов во ввод\footnote{как правило, на практике эти действия выполняются модулем лексического анализа под управлением синтаксического анализатора} и повторным сканированием с целью попытки применить другую продукцию.
+	
+	Пример ниже демонстрирует умышленное использование отката при анализе программы на языке $C$.
+	\begin{example}
+	Рассмотрим 2 конструкции языка $C$:
+	\begin{enumerate}
+		\item \verb|static tp = 5;|
+		\item \verb|static tp v = 5;|
+	\end{enumerate}
+	В силу того, что в языке $C$ примитивный тип $int$ может быть указан неявно при объявлении переменной, а так же есть возможность задания пользовательского типа $tp$, анализатор, просмотрев часть входной строки из двух токенов --- \verb|static tp|, не может однозначно определить, какое правило применить: \verb|tp| может быть типом, а может быть именем переменной. В таком случае анализатор пытается считать следующий токен за \verb|tp|, и, если это оказался декларатор, применяет правило для объявления переменной $v$ типа $tp$, в противном случае производится возврат прочитанного токена обратно во входной поток посредством вызова соотвествующей команды лексического анализатора, и применяется другое правило.
+	
+	Следует отметить, что некоторые из подобных правил с альтернативой могут быть преобразованы левой факторизацией, но не все. Поэтому использование отката в рекурсивном спуске --- скорее практическая необходимость, продиктованная неподходящей исходной грамматикой.
+	
+	\end{example}
+	Основной теоретический недостаток рекурсивного спуска с откатом --- теоретически экспоненциальная сложность от длины строки, как правило, не реализуемая на практике.
+	Несмотря на то, что в литературе обычно указывается предпочтительность использования табличных методов \cite{}, на практике в модулях синтаксического анализа большинства современных промышленных компиляторов С, C++, Fortran, Rust используется вручную реализованный рекурсивный спуск с поддержкой отката\footnote{используется в Clang, современном GCC, Rust C, MSVC на момент осени 2023 г.}. Для изначально просто спроектированных языков типа $Pascal$, рекурсивный спуск можно реализовать без отката, так подобрана грамматика.
+	
+	Данный подход применяется как для ручного написания синтаксических анализаторов, так и при генерации анализаторов по грамматике, например средствами ANTLR. 
+	
+	\section{LL-алгоритм синтаксического анализа}
+	
+	LL(k) --- алгоритм синтаксического анализа --- нисходящий анализ без отката, с предпросмотром. 
+	Решение о том, какую продукцию применять, принимается на основании просмотра $k$ символов, непосредственно следующих за текущим во входной строке. 
+	Временная сложность алгоритма $O(n)$, где $n$~--- длина входной строки. 
+	
+	Алгоритм использует:
+	\begin{itemize}
+		\item входной буфер с указателем на позицию текущего символа
+		\item стек для хранения промежуточных данных
+		\item таблицу анализатора, управляющую разбором.
+	\end{itemize}
+	 Более строго, управляющая таблица для грамматики $G=\langle\Sigma,N,P,S\rangle$ -- это частичная фунция $T_k:N\times{\Sigma^{\leq{k}}}\to{P\cup{\{-\}}}$.
+	 По строкам в управляющей таблице размещаются все нетерминалы грамматики, по столбцам -- всевозможные последовательности терминалов, длиной не более $k$\footnote{На практике таблица может получиться довольно разреженной, поэтому столбцы для последовательностей, не выводимых из нетерминалов грамматики, опускают}$^,$\footnote{Теоретически показательный характер роста количества столбцов от $k$ на практике, как правило, не реализуется, так как реальные языки программирования обычно не задаются грамматиками, дающими теоретически худший случай}, а также столбец для маркера конца строки --- $\$$. 
+	В ячейке таблицы указано правило, которое нужно применять, если рассматривается нетерминал $A$, а следующие $m$ символов строки~--- $t_{1} \dots t_{m}$, где $m \leq k$, либо прочерк, если такого правила нет. 
+	
+	
+	\begin{center}
+		\begin{tabular}{ c | c | c | c | c }
+			& $\dots$ & $t_{1} \dots t_{m}$ & $\dots$ & $\$$ \\ \hline  
+			$\dots$  & $\dots$ & $\dots$ & $\dots$ & $\dots$ \\ \hline  
+			$A$  & $\dots$ & $A \to \alpha$ & $\dots$ & $\dots$ \\ \hline  
+			$\dots$  & $\dots$ & $\dots$ & $\dots$ & $\dots$ 
+		\end{tabular}  
+	\end{center}
+	
+	Управляющая таблица строится алгоритмически на основании построения для каждого нетерминала $A$ вспомогательных множеств $FIRST_{k}(A)$ и $FOLLOW_{k}(A)$, содержащих, соответсвенно, все возможные первые и непосредственно следующие $k$ символов в результирующем выводе, при использовании нетерминала $A$.
+	 
+	\begin{definition}
+		Пусть $G = \langle N, \Sigma, P, S \rangle$~--- КС-грамматика. Множество $FIRST_{k}$ определяется для сентенциальной формы $\alpha$ как:\\
+		$FIRST_{k}(\alpha) = \{ \omega \in \Sigma^* \mid \alpha \to \omega \text{ и } |\omega| < k$ либо $ \exists \beta: \alpha \to \omega \beta \text{ и } |\omega| = k \}
+		$
+		, где $\alpha, \beta \in (N \cup \Sigma)^*.$ 
+	\end{definition}
+	
+	Пусть дана грамматика  $\langle \Sigma, N, S, P \rangle$. Алгоритм построения $FIRST_k$ следующий: 
+	
+	\begin{algorithm}[tbh]\label{alg:FIRSTK}
+		\begin{algorithmic}
+			\State{$\forall A \in N, FIRST_k(A) \gets \emptyset$}
+			\State{$\forall a \in \Sigma, FIRST_k(a) \gets \{a\}$}
+			\While{$FIRST_k(A)|_{a \in N}$ изменяется}
+			\For{$A \to X_1\dots{X_l} \in P$}
+			\State {$FIRST_k(A)\gets{FIRST_k(FIRST_k(X_1)\cdot \dots {\cdot{FIRST_k(X_l)}})}$}
+			\EndFor
+			\EndWhile
+			
+			
+		\end{algorithmic}
+	\end{algorithm}
+	
+	\begin{definition}
+		Пусть $G = \langle N, \Sigma, P, S \rangle$~--- КС-грамматика. Множество $FOLLOW_{k}$ определяется для сентециальной формы $\beta$ как:\\
+		$FOLLOW_{k}(\beta) = \{ \omega \in \Sigma^* \mid \exists \gamma, \alpha: S \to \gamma \beta \alpha$ и $ \omega \in FIRST_{k}(\alpha) \}$
+	\end{definition}
+	
+	Для построения $FOLLOW_k$ нужно выполнить сдедующее:
+	
+	\begin{algorithm}[tbh]\label{alg:FOLLOWK}
+		\begin{algorithmic}
+			\State{$ FOLLOW_k(S) \gets \{\varepsilon\}$}
+			\State{$\forall A \in N\setminus{\{S\}}\  FOLLOW_k(A)\gets{\emptyset}$}
+			
+			\While{$FOLLOW_k(A)|_{A \in N}$ изменяется}
+			\For{$B \to \beta \in P$}
+			\For{$\beta=\mu A \nu$ разбиений, где $A \in N, \mu,\nu \in (\Sigma \cup{\{\$\}} \cup N)^*$}
+			\State {$FOLLOW_k(A)\gets FOLLOW_k(A)\cup FIRST_k( FIRST_k(\nu)\cdot{FOLLOW_k(B)})$}
+			\EndFor
+			\EndFor
+			\EndWhile
+		\end{algorithmic}
+	\end{algorithm}
+	
+	Приведём алгоритм построения $T_k$ для всех $A \in N$ и $x \in \Sigma^{\leq{k}}\cup{\{\$\}}, k > 0$ по $FIRST_k$ и $FOLLOW_k$ (в начале элементы $T_k$ инициализированы '---'). Заметим также, что в псевдокоде ниже ветвь с сообщением о конфликте нужна для сигнализирования о неоднозначности в заполнении ячейки таблицы: не для всех КС-грамматик по множествам $FIRST_{k}$ и $FOLLOW_{k}$ возможно выбрать применяемую продукцию, следовательно, нельзя и однозначно построить управляющую таблицу, поэтому данный алгоритм применим только для КС-грамматик особого класса --- LL(k)-грамматик.
+	
+	\begin{algorithm}[tbh]\label{alg:TK}
+		\begin{algorithmic}
+		
+			\For{$A \to \alpha \in P$}
+			\For{$x \in FIRST_{k}(FIRST(\alpha)\cdot{FOLLOW_k(A)})$}
+			\If{$T_k(A,x)=$'---'}
+			\State{$T_k(A,x)\gets(A\to{\alpha})$}
+			\Else
+			\State{Произошел конфликт: нет неоднозначного правила для $A,x$}
+			\EndIf
+			\EndFor
+			\EndFor
+		\end{algorithmic}
+	\end{algorithm}
+	
+	\begin{definition}
+		LL(k) грамматика --- грамматика, для которой для некоторого $k$ на основании множеств $FIRST_{k}$ и $FOLLOW_{k}$ можно однозначно определить, какую продукцию применять. 
+	\end{definition}
+	 То есть, если дана грамматика $G = \langle N, \Sigma, P, S \rangle$ и для любого её правила вида $A \to X_1\dots{X_l} \in P$, если $x \in FIRST_k(FIRST_k(X_1)\cdot{}\dots{\cdot{}{FIRST_k(X_l)}}\cdot{FOLLOW_k(A)})$, тогда существует единственная запись в ячейке таблицы $T_k(A,x)=A \to X_1\dots{X_l}$. Если данное условие приводит к противоречиям, то, следовательно, грамматика $G$ не является LL(k).
+	
+	Критерий того, что грамматика является $LL(k)$ грамматикой непосредственно следует из определения:
+	
+	\begin{theorem} 
+		$G = \langle N, \Sigma, P, S \rangle$ является $LL(k)$ грамматикой тогда и только тогда, когда
+		$(\forall A \to \alpha|\beta \in P) \Rightarrow ({FIRST_k(\alpha\gamma)\cap{FIRST_k(\beta\gamma)}}=\emptyset)$ при всех таких $\omega A \gamma$, что $S \to_{lm}^* \omega A \gamma$.
+	\end{theorem}
+	
+	\begin{example}
+		Грамматика $S \to aS | a$ не является LL(1)-грамматикой, так как $FIRST(aS)=FIRST(a)=\{a\}$, и $FIRST(aS)\cap{FIRST(a)}=\{a\}$, но LL(2)-грамматикой, так как $FIRST_2(aS)=\{aa\}$,$ FIRST_2(a)=\{a\}$, и $FIRST_2(aS)\cap{FIRST_2(a)}=\emptyset$ -- является.
+	\end{example}
+	
+    Дальнейшие рассуждения и построения будут проводиться для $k=1$. Важно также заметить, что при больших $k$ управляющая таблица сильно разрастается\footnote{Хоть и не показательно, как в теоретически худшем случае, но всё-таки разрастается}, поэтому на практике алгоритм применим для небольших $k$.
+	
+	
+	В частном случае для $k = 1$:
+	\begin{definition}
+	$ FIRST(\alpha) = \{ a \in \Sigma \mid \exists \gamma \in (N \cup \Sigma)^*: \alpha \to a \gamma \} $, где $ \alpha \in (N \cup \Sigma)^* $
+	\end{definition}
+	\begin{definition}
+	$ FOLLOW(\beta) = \{ a \in \Sigma \mid \exists \gamma, \alpha \in (N \cup \Sigma)^* : S \to \gamma \beta a \alpha \} \text{, где } \beta \in (N \cup \Sigma)^*  $
+	\end{definition}
+	Множество $FIRST$ можно вычислить, пользуясь следующими соотношениями:
+	
+	\begin{itemize}
+		\item $FIRST(a \alpha) = \{a\}, a \in \Sigma, \alpha \in (N \cup \Sigma)^* $
+		\item $FIRST(\varepsilon) = \{\varepsilon\}$
+		\item $FIRST(\alpha \beta) = FIRST(\alpha) \cup (FIRST(\beta) \text{, если } \varepsilon \in FIRST(\alpha))$
+		\item $FIRST(A) = FIRST(\alpha) \cup FIRST(\beta) \text{, если в грамматике есть правило } A \to \alpha \mid\beta$
+	\end{itemize}
+	
+	Алгоритм для вычисления множества $FOLLOW$:
+	\begin{algorithm}
+	\begin{itemize}
+		\item Положим $FOLLOW(X) = \varnothing, \forall X \in N$
+		\item $FOLLOW(S) = FOLLOW(S) \cup \{\$\} \text{, где } S \text{--- стартовый нетерминал}$
+		\item Для всех правил вида $A \to \alpha X \beta: FOLLOW(X) = FOLLOW(X) \cup (FIRST(\beta) \setminus \{\varepsilon\} )$
+		\item Для всех правил вида $A \to \alpha X \text{ и } A \to \alpha X \beta \text{, где } \varepsilon \in FIRST(\beta): FOLLOW(X) = FOLLOW(X) \cup FOLLOW(A)$
+		\item Последние два пункта применяются пока есть что добавлять в строящиеся множества.
+	\end{itemize}
+	\end{algorithm}	
+	
+	\begin{example}
+		
+		Рассмотрим грамматику $G$ со следующими продукциями:
+		\begin{align*}
+			S  &\to a S' & A' \to b \mid a \\
+			S' &\to A b B S' \mid \varepsilon &  B  \to c \mid \varepsilon\\
+			A  &\to a A' \mid \varepsilon 
+		\end{align*}
+		
+		
+		Пример множеств $FIRST$ для нетерминалов грамматики $G$:
+		
+		\begin{multicols}{2}
+			
+			\columnbreak
+			
+			\begin{align*}
+				FIRST(S)  &= \{ a \}  & FIRST(B)  &= \{ c, \varepsilon \} \\
+				FIRST(A)  &= \{ a, \varepsilon \} & FIRST(S') &= \{ a, b, \varepsilon \}\\
+				FIRST(A') &= \{ a, b \}   
+			\end{align*}
+		\end{multicols}
+		
+		Пример множеств $FOLLOW$ для нетерминалов грамматики $G$:
+		
+		\begin{align*}
+			FOLLOW(S)  &= \{ \$ \} & \\
+			FOLLOW(S') &= \{ \$ \} &(S \to a S')\\
+			FOLLOW(A)  &= \{ b \}  &(S' \to A b B S') \\
+			FOLLOW(A') &= \{ b \}  &(A \to a A')\\
+			FOLLOW(B)  &= \{ a, b, \$ \} &(S' \to A b B S', \varepsilon \in FIRST(S'))
+		\end{align*}
+		
+	\end{example}
+	
+	Теорема о связи LL(1)-грамматики с видом множеств $FIRST$ и $FOLLOW$ приведена ниже:
+	\begin{theorem}
+		Грамматика $G = \langle \Sigma, N, S, P \rangle$ и $\omega \in \Sigma^{*}$ является LL(1) тогда и только тогда, когда выполнены 2 условия:
+		\begin{enumerate}
+			\item $(\forall A \to \alpha|\beta \in P) \Rightarrow ({FIRST(\alpha)\cap{FIRST(\beta)}}=\emptyset)$ 
+			\item $(\forall A \to \alpha|\beta \in P: \varepsilon \in FIRST(\alpha)) \Rightarrow ({FOLLOW(A)\cap{FIRST(\beta)}}=\emptyset)$
+		\end{enumerate}
+		Здесь $\alpha,\beta \in (N\cup{\Sigma})^*$ --- две сентенциальные формы $G$.
+	\end{theorem}
+	
+	\begin{example}
+		Грамматика, задающая язык строк с равным количеством символов $a$ и $b$: $S \to aSbS|bSaS|\varepsilon$, не является LL(1).
+		
+		Проверим  условие (1) теоремы.
+		
+		\begin{align*}
+			FIRST(aSbS)  &= \{ a \} & \\
+			FIRST(bSaS) &= \{ b \} & \\
+			FIRST(\varepsilon)  &= \{ \varepsilon \}  & \\
+		\end{align*}
+		
+		Условие (1) выполнено.
+		
+		Но грамматика содержит правило $S \to \varepsilon$, и $\varepsilon \in FIRST(\varepsilon)$, следовательно, нужно проверять (2).
+		$FOLLOW(S)=\{a,b,\$\}$ имеет непустое пересечение как с $FIRST(aSbS)$, так и с $FIRST(bSaS)$, поэтому (2) не выполняется, и грамматика не является LL(1).
+	\end{example}
+	
+	Условия критерия накладывают довольно серьёзные ограничения на вид грамматики. В особенности:
+	
+	Грамматика должна быть однозначной:
+	
+	\begin{example}
+		\begin{align*}
+			G: & \\
+			S \to aA | B | c & \\
+			A \to b|aA & \\
+			B \to aA|a\varepsilon &
+		\end{align*}
+		Если анализируемая строка начинается с $a$, невозможно сделать однозначный выбор между $S \to aA$ и $ S\to B$. 
+	\end{example}
+	
+	
+	
+	Даже вывод $\varepsilon$ из двух правил альтернативы невозможен:
+	
+	\begin{example}
+		\begin{align*}
+			G: & \\
+			S \to aA & \\
+			A \to BC|B & \\
+			C \to b|\varepsilon & \\
+			B \to \varepsilon &
+		\end{align*}
+		Рассмотрим два разных левых порождения $a$ в $G$:
+		\begin{enumerate}
+			\item $S \to_{lm} \underline{aA} \to_{lm} \underline{aB} \to_{lm} a$
+			\item $S \to_{lm} \underline{aA} \to_{lm} \underline{aBC} \to_{lm} a$
+		\end{enumerate}
+		В виду того, что из $B\to_{lm}^*\varepsilon$ и $BC\to_{lm}^*\varepsilon$, нельзя однозначно произвести подчёркнутый шаг левого порождения, $a$ в $G$ имеет два различных дерева вывода, и LL(1)-анализ неприменим.
+	\end{example} 
+	
+	
+	Управляющая таблица LL(1)-анализатора заполняется следующим образом: продукции $A \to \alpha, \alpha \neq \varepsilon$ помещаются в ячейки с индексами $(A, a)$, где $a \in FIRST(\alpha)$, продукции $A \to \alpha$~--- в ячейки $(A, a)$, где $a \in FOLLOW(A)$, если $\varepsilon \in FIRST(\alpha)$, а если при этом и $\$ \in FOLLOW(A)$, то и в ячейку $(A,\$)$.
+	Иногда, для небольших грамматик, в целях наглядности в таблицу добавляют 2 столбца с $FIRST,FOLLOW$ множествами для нетерминалов.
+	\begin{example}
+		
+		Пример таблицы для грамматики $S \to aSbS \mid \varepsilon$
+		
+		\begin{center}
+			\begin{tabular}{ r || c | c || c | c | c }
+				N & $FIRST$ & $FOLLOW$ & a & b & $\$ $ \\ \hline  
+				$S$ & $\{ a, \varepsilon \}$ & $\{ b, \$ \}$ & $S \rightarrow aSbS$ & $S \rightarrow \varepsilon$ & $S \rightarrow \varepsilon$ 
+			\end{tabular}  
+		\end{center}
+		
+	\end{example}
+	
+	Опишем работу анализатора.
+	LL(1)-анализатор принимает входную строку, управляющую таблицу, и работает следующим образом:
+	
+	\begin{algorithm}
+		\begin{algorithmic}
+			\State {$stack.push(\$,S)$}
+			\State {$c \gets input.scan()$}
+			
+			\While{$stack.top() \neq \$$}
+			\State $X \gets stack.top()$
+			\If{$X=c$}
+			\State{$stack.pop()$}
+			\State{$c \gets input.scan()$}
+			\ElsIf{$X \in N$}
+			\If{$T[X,c]=X\to X_1\dots X_m$}
+			\State {$stack.pop()$} 
+			\State {$stack.push(X_m,\dots,X_1)$}
+			\Else
+			\State ошибка: пустая ячейка таблицы!
+			\EndIf
+			\State ошибка!
+			\EndIf
+			\EndWhile
+			
+			\If{$c \neq \$$}
+			\State ошибка: не вся строка разобрана!
+			\EndIf		
+		\end{algorithmic}
+		
+	\end{algorithm}
+	\begin{itemize}
+		
+	\item На каждом шаге алгоритма конфигурация автомата --- это позиция во входной строке и стек.
+	\item В начале работы стек пуст, а позиция во входной строке соответствует её началу.
+	На певом шаге в стек добавляются последовательно $\$$ и cтартовый нетерминал $S$.
+	\item На каждом шаге анализируется существующая конфигурация и совершается одно из действий.
+	\begin{itemize}
+		\item Если текущая позиция --- конец строки и вершина стека --- символ конца строки, то анализатор успешно завершает разбор.
+		\item Если текушая вершина стека --- терминал, то анализатор проверяет, что позиция в строке соответствует этому терминалу. Если да, то снимает элемент со стека, сдвигает указатель на 1 позицию вправо, и продолжает разбор.
+		Иначе --- завершает разбор с ошибкой.
+		\item Если текущая врешина стека --- нетерминал $X_i$ и текущий входной символ $c$, то ищет в управляющей таблице $T$ ячейку с координатами $(X_i, c)$ и кладёт на стек содержимое правой части этой ячейки так, чтобы самый левый символ оказался на вершине (операция $stack.push$ применена к символам правой части справа налево), иначе сигнализирует об ошибке.
+	\end{itemize}
+	\end{itemize}
+	
+	\begin{example}Пример работы LL(1) анализатора.
+		Рассмотрим грамматику $S \to aSbS \mid \varepsilon$ и выводимое слово $\omega = abab$.
+		
+		Расмотрим пошагово работу алгоритма. Используем управляющую таблицу, построенную в предыдущем примере. Символ строки, доступный по указателю позиции в строке, выделен жирным шрифтом.
+		
+		
+		\begin{enumerate}
+			\item Начало работы.
+			
+			Стек: \,
+			\begin{tabular}[c]{ |c| } 
+				\\ \hline
+			\end{tabular}  
+			\qquad  \qquad \qquad  \qquad входное слово: \,
+			\begin{tabular}[c]{ |c|c|c|c|c| } 
+				\hline
+				\textbf{a} & b & a & b & \$ \\ \hline
+			\end{tabular}
+			
+			Стек пуст, по указателю доступен первый символ слова.
+			
+			\item Кладём $\$$ и стартовый символ $S$ на стек
+			
+			Стек: \,
+			\begin{tabular}[c]{ |c| } 
+				\\ \hline
+				$S$ \\ \hline
+				\$ \\ \hline
+			\end{tabular}  
+			\qquad  \qquad \qquad  \qquad входное слово: \,
+			\begin{tabular}[c]{ |c|c|c|c|c| } 
+				\hline
+				\textbf{a} & b & a & b & \$ \\ \hline
+			\end{tabular}
+			
+			\item Ищем ячейку с координатами (S, a), применяем продукцию из ячейки.
+			
+			Стек: \,
+			\begin{tabular}[c]{ |c| } 
+				\\ \hline
+				$a$ \\ \hline
+				$S$ \\ \hline
+				$b$ \\ \hline
+				$S$ \\ \hline
+				\$ \\ \hline
+			\end{tabular}  
+			\qquad  \qquad \qquad  \qquad входное слово: \,
+			\begin{tabular}[c]{ |c|c|c|c|c| } 
+				\hline
+				\textbf{a} & b & a & b & \$ \\ \hline
+			\end{tabular}
+			
+			\item Снимаем терминал $a$ со стека и сдвигаем указатель.
+			
+			Стек: \,
+			\begin{tabular}[c]{ |c| } 
+				\\ \hline
+				$S$ \\ \hline
+				$b$ \\ \hline
+				$S$ \\ \hline
+				\$ \\ \hline
+			\end{tabular}  
+			\qquad  \qquad \qquad  \qquad входное слово: \,
+			\begin{tabular}[c]{ |c|c|c|c|c| } 
+				\hline
+				a & \textbf{b} & a & b & \$ \\ \hline
+			\end{tabular}
+			
+			\item Ищем ячейку с координатами (S, b), применяем продукцию из ячейки.
+			
+			Стек: \,
+			\begin{tabular}[c]{ |c| } 
+				\\ \hline
+				$b$ \\ \hline
+				$S$ \\ \hline
+				\$ \\ \hline
+			\end{tabular}  
+			\qquad  \qquad \qquad  \qquad входное слово: \,
+			\begin{tabular}[c]{ |c|c|c|c|c| } 
+				\hline
+				a & \textbf{b} & a & b & \$ \\ \hline
+			\end{tabular}
+			
+			\item Снимаем терминал $b$ со стека и сдвигаем указатель.
+			
+			Стек: \,
+			\begin{tabular}[c]{ |c| } 
+				\\ \hline
+				$S$ \\ \hline
+				\$ \\ \hline
+			\end{tabular}  
+			\qquad  \qquad \qquad  \qquad входное слово: \,
+			\begin{tabular}[c]{ |c|c|c|c|c| } 
+				\hline
+				a & b & \textbf{a} & b & \$ \\ \hline
+			\end{tabular}
+			
+			\item Ищем ячейку с координатами (S, a), применяем продукцию из ячейки.
+			
+			Стек: \,
+			\begin{tabular}[c]{ |c| } 
+				\\ \hline
+				$a$ \\ \hline
+				$S$ \\ \hline
+				$b$ \\ \hline
+				$S$ \\ \hline
+				\$ \\ \hline
+			\end{tabular}  
+			\qquad  \qquad \qquad  \qquad входное слово: \,
+			\begin{tabular}[c]{ |c|c|c|c|c| } 
+				\hline
+				a & b & \textbf{a} & b & \$ \\ \hline
+			\end{tabular}
+			
+			\item Снимаем терминал $a$ со стека и сдвигаем указатель.
+			
+			Стек: \,
+			\begin{tabular}[c]{ |c| } 
+				\\ \hline
+				$S$ \\ \hline
+				$b$ \\ \hline
+				$S$ \\ \hline
+				\$ \\ \hline
+			\end{tabular}  
+			\qquad  \qquad \qquad  \qquad входное слово: \,
+			\begin{tabular}[c]{ |c|c|c|c|c| } 
+				\hline
+				a & b & a & \textbf{b} & \$ \\ \hline
+			\end{tabular}
+			
+			\item Ищем ячейку с координатами (S, b), применяем продукцию из ячейки.
+			
+			Стек: \,
+			\begin{tabular}[c]{ |c| } 
+				\\ \hline
+				$b$ \\ \hline
+				$S$ \\ \hline
+				\$ \\ \hline
+			\end{tabular}  
+			\qquad  \qquad \qquad  \qquad входное слово: \,
+			\begin{tabular}[c]{ |c|c|c|c|c| } 
+				\hline
+				a & b & a & \textbf{b} & \$ \\ \hline
+			\end{tabular}
+			
+			\item Снимаем терминал $b$ со стека и сдвигаем указатель.
+			
+			Стек: \,
+			\begin{tabular}[c]{ |c| } 
+				\\ \hline
+				$S$ \\ \hline
+				\$ \\ \hline
+			\end{tabular}  
+			\qquad  \qquad \qquad  \qquad входное слово: \,
+			\begin{tabular}[c]{ |c|c|c|c|c| } 
+				\hline
+				a & b & a & b & \textbf{\$} \\ \hline
+			\end{tabular}
+			
+			\item Ищем ячейку с координатами (S, \$), применяем продукцию из ячейки.
+			
+			Стек: \,
+			\begin{tabular}[c]{ |c| } 
+				\\ \hline
+				\$ \\ \hline
+			\end{tabular}  
+			\qquad  \qquad \qquad  \qquad входное слово: \,
+			\begin{tabular}[c]{ |c|c|c|c|c| } 
+				\hline
+				a & b & a & b & \textbf{\$} \\ \hline
+			\end{tabular}    
+			
+			\item Оказались в конце строки и на вершине стека символ конца --- завершаем разбор.
+			
+		\end{enumerate}
+		
+	\end{example}
+	
+	Можно расширить данный алгоритм так, чтобы он строил дерево вывода. Дерево будет строиться сверху вниз, от корня к листьям. Для этого необходимо расширить шаги алгоритма:
+	\begin{itemize}
+		\item В ситуации, когда анализатор читает очередной нетерминал (на вершине стека и во входе --- одинаковые терминалы), нужно создать листовую вершину с соответствующим терминалом.
+		\item В ситуации, когда нетерминал в стеке заменяется на правую часть продукции, нужно создать нелистовую вершину, соответствующую нетерминалу в левой части применяемой продукции.
+	\end{itemize} 
+	
+	Дерево вывода для LL(1), как и в целом для LL(k), будет строиться однозначно, что следует из однозначности грамматик.
+	
+	Также отметим, что LL-анализ, как и безоткатный рекурсивный спуск, не работает с леворекурсивными грамматиками: алгоритм может зациклиться. Таким образом, по некоторым грамматикам можно построить LL(k)-анализатор (для LL(k) грамматик), но не по всем. Методы борьбы с левой рекурсией даны в следующем разделе, а вот с неоднозначностями ничего не поделаешь.
+	
+	\section{Преобразования грамматики к LL(1)}
+	
+	Иногда грамматику $G = \langle \Sigma, N, S, P \rangle$, не являющуюся LL(1), можно привести к LL(1) грамматике. В первую очередь, можно применить методы устранения левой рекурсии и левую факторизация. Следует отметить, что в ходе преобразований не всякая грамматика становится LL(1), а также то, что грамматика может стать менее понятной. Также доказано, что существование LL грамматики, эквивалентной $G$, является алгоритмически неразрешимой задачей. 
+	
+	\subsection{Устранение левой рекурсии}
+	Непосредственная левая рекурсия, то есть правила вида $A \to A\alpha$, можно устранить следующим образом.
+	
+	\begin{enumerate}
+		\item Группируем правила с $A$ в левой части:
+		$A \to A\alpha_1|\dots|A\alpha_m|\beta_1|\dots|\beta_n$, где никакая из сентенциальных форм $\beta_i$ не начинается с $A$.
+		\item Добавляем новый нетерминал $A'$
+		\item Заменяем этот набор правил на
+		
+		\begin{align*} 
+			A \to \beta_1 A'|\dots|\beta_n A' \\
+			A' \to \alpha_1 A'|\dots|\alpha_m A'|\varepsilon
+		\end{align*}
+	\end{enumerate} 
+	
+	Теперь из $A$ можно вывести те же строчки, что и раньше, но без левой рекурсии. Заметим, что в ходе данного преобразования появляются новые $\varepsilon$-правила, по одному на каждый добавленный нетерминал.
+	Метод выше устраняет только непосредственную левую рекурсию.
+	
+	Пусть дана грамматика $G = \langle \Sigma, N, S, P \rangle$, не содержащая $\varepsilon$-правил. Для удаления из $G$ скрытой левой рекурсии, включающей два и более шага, применяется следующий алгоритм:
+	
+	\begin{algorithm}
+		\begin{algorithmic}
+			\State {Нетерминалы пронумерованы в произвольном порядке, $n \gets |N|$}
+			\For{$i \in [1,n]$}
+			\For{$j \in [1,i-1]$}
+			\State $A_j \to \beta_1|\dots|\beta_k$ --- все текущие правила для $A_j$
+			\State Заменить все $A_i \to A_j\alpha$ на $A_i \to \beta_1\alpha|\dots|\beta_k\alpha$
+			\EndFor
+			\State удалить правила $A_i \to A_i$
+			\State устранить непосредственную левую рекурсию для $A_i$.
+			\EndFor
+		\end{algorithmic}
+		
+	\end{algorithm}
+	Полученная грамматика не содержит левой рекурсии. В ходе преобразования могут появиться $\varepsilon$-правила.
+	
+	\subsection{Левая факторизация}
+	Идея левой факторизации лежит в том, чтобы в случае, когда неясно, какую из альтернатив применять для раскрытия нетерминала $A$, изменить правила для $A$ так, чтобы отложить решение до тех пор, пока не будет достаточно информации для принятия однозначного решения.
+	
+	Преобразование: для правил $A\to \alpha\beta_1|\alpha\beta_2$ грамматики $G = \langle \Sigma, N, S, P \rangle$ и непустой строчки с префиксом, выводимым из $\alpha$, когда неизвестно, какое правило применять, можно добавить новое правило $A\to\alpha A'$, и после анализа того, что выводимо из $\alpha$, попробовать применить новое правило $A' \to \beta_1$ либо $A' \to \beta_2$.
+	
+	\begin{algorithm}
+		\begin{algorithmic}
+		\While {В грамматике есть альтернативы с общим префиксом}
+		\State{Для каждого $A \in N$ найти самый длинный префикс $\alpha$ для альтернатив в $P$ с $A$ в левой части.}
+		\If{$\alpha \neq \varepsilon$}
+		\State {Заменить все $A\to \alpha\beta_1|\dots|\alpha\beta_m|\gamma$ на:}
+		\State{$A\to\alpha A'|\gamma$}
+		\State{$A' \to \beta_1|\dots|\beta_m$}
+		\EndIf
+		\EndWhile
+		\end{algorithmic}
+	 
+		
+	\end{algorithm}
+	
+	После преобразования грамматика может стать не LL(1).
+	
+	Рассмотрим классический пример \verb|'if, if-else'| в реализации языков программирования:
+	
+	\begin{example}
+		\begin{align*}
+			S\ \to \ if\ E:\ S | if\ E:\ S\ else:\ S | a \\
+			E \to b
+		\end{align*}
+		
+		После левой факторизации грамматика имеет вид:
+		
+		\begin{align*}
+			S \to if\ E:\ SS' | a \\
+			S' \to else:\ S | \varepsilon \\
+			E \to b
+		\end{align*}
+		
+		
+		\textbf{Упражнение}. Самостоятельно проведите левую факторизацию. Является ли полученная грамматика LL(1) грамматикой?
+		
+	\end{example}
+	\section{Упражнения}
+	Для рекурсивного спуска без отката также существует как критерий применимости, так и каноническая форма правил, конструктивно выражаемые в терминах вида множеств $FIRST$ и $FOLLOW$, и следующие непосредственно из особенности программной реализации.
+	
+	\begin{theorem}
+		Рекурсивный спуск без отката для грамматики $G = \langle \Sigma, N, S, P \rangle$ и $\omega \in \Sigma^{*}$ может быть реализован тогда и только тогда, когда для любого правила с альтернативой $A\to \alpha | \beta \in P$ выполнены условия:
+		\begin{enumerate}
+			\item $FIRST(\alpha)\cap{FIRST(\beta)}=\emptyset$
+			\item $\varepsilon$ не может быть выведен одновременно и из $\alpha$, и из $\beta$
+			\item Если $\beta \to^*\varepsilon$, то $FIRST(A)\cap{FOLLOW(A)}=\emptyset$
+		\end{enumerate}
+	\end{theorem}
+	
+	Является ли грамматика $G$ LL(1) грамматикой:
+	
+	\begin{example}
+		\begin{align*}
+			G: & \\
+			S \to A|B & \\
+			A \to aA|c & \\
+			B \to aB|b
+		\end{align*}
+		%
+		%Рассмотрим два шага разных левых порождений строки, начинающейся с $a$ в $G$:
+		%\begin{enumerate}
+		%	\item $\underline{S} \to_{lm} \underline{A} \to_{lm} {aA} \to_{lm} \cdots$ 
+		%	\item $\underline{S} \to_{lm} \underline{B} \to_{lm} {aB}\to_{lm} \cdots$
+		%\end{enumerate}
+		
+		%Вычислим $FIRST$.
+		%\begin{align*}
+		%	FIRST(A)  &= \{ a, c \} & \\
+		%	FIRST(B) &= \{ a, b \}
+		%\end{align*}
+		
+		%В виду того, что $FIRST(A)\cap{FIRST(B)} \neq %\emptyset$, нельзя однозначно произвести %подчёркнутый шаг левого порождения, и %рекурсивный спуск неприменим.
+	\end{example}
+	
+	
+	Достаточное условие применимости рекурсивного спуска без отката даёт так называемый канонический вид грамматики.
+	
+	\begin{definition}
+		Грамматика $G = \langle \Sigma, N, S, P \rangle$ и $\omega \in \Sigma^{*}$ называется грамматикой в каноническом виде для рекурсивного спуска без отката, если её правила удовлетворяют следующему виду:
+		\begin{enumerate}
+			\item либо $A\to \alpha, \alpha \in (N\cup{\Sigma})^*$ --- единственное правило вывода для $A \in P$ 
+			\item либо, $A\ \to a_1\alpha_1|\dots|a_m\alpha_m: \alpha_i \in (N\cup{\Sigma})^* , a_i \in \Sigma,  \forall i=1\dots{m}$, и $\alpha_i \neq \alpha_j$, если $i \neq j$
+			\item либо $A\ \to a_1\alpha_1|\dots|a_m\alpha_m|\varepsilon: \alpha_i \in (N\cup{\Sigma})^* , a_i \in \Sigma,  \forall i=1\dots{m}$, и $\alpha_i \neq \alpha_j$, если $i \neq j$, и $FIRST(A)\cap{FOLLOW(A)}=\emptyset$.
+		\end{enumerate}
+	\end{definition}
+	
+	Следует отметить, что в реализациях безоткатного рекурсивного спуска\footnote{не говоря уже о рекурсивном спуске с откатом} для реальных языков программирования достаточные условия могут нарушаться. 
+	
+	
+\end{document}
