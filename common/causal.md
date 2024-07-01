@@ -11,6 +11,7 @@
 |CausalML|[Causalml: Python package for causal machine learning](https://arxiv.org/pdf/2002.11631.pdf)|arxiv|[Python](https://github.com/uber/causalml)|Uplift modeling and causal inference with machine learning algorithms|
 
 ####  Another libs
+|Name|Paper/Documentation|Venue|Code|Comment|
 |---|---|---|---|---|
 |JustCause|[Underlying thesis](https://justcause.readthedocs.io/en/latest/_downloads/e054f7a0fc9cf9e680173600cb4b4350/thesis-mfranz.pdf)|NA|[Python](https://github.com/inovex/justcause)|For evaluation of heterogeneous treatment effect estimators on common reference as well as synthetic data.|
 |WhyNot|[Documentation](https://whynot.readthedocs.io/en/latest/)|NA|[Python](https://github.com/zykls/whynot)|An experimental sandbox for causal inference and decision making in dynamics.|
