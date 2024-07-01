@@ -4,14 +4,14 @@
 
 ### Causal inference
 #### Most preferred libs
-|Name|Paper/Documentation|Code|Comment|Summary|
+|Name|Paper/Documentation|Code|Comment|Summary of Team's Opinion|
 |---|---|---|---|---|
 |DoWhy|[Tutorial on Causal Inference and Counterfactual Reasoning](http://causalinference.gitlab.io/kdd-tutorial/)|[Python](https://github.com/microsoft/dowhy)|Python library for causal inference that supports explicit modeling and testing of causal assumptions.|-|
 |EconML|[Causal Inference and Machine Learning in Practice with EconML and CausalML](https://causal-machine-learning.github.io/kdd2021-tutorial/)|[Python](https://econml.azurewebsites.net/spec/spec.html)|Python package that applies the power of machine learning techniques to estimate individualized causal responses from observational or experimental data.|-|
 |CausalML|[Causalml: Python package for causal machine learning](https://arxiv.org/pdf/2002.11631.pdf)|[Python](https://github.com/uber/causalml)|Uplift modeling and causal inference with machine learning algorithms.|-|
 
 ####  Another libs
-|Name|Paper/Documentation|Code|Comment|Summary|
+|Name|Paper/Documentation|Code|Comment|Summary of Team's Opinion|
 |---|---|---|---|---|
 |JustCause|[Underlying thesis](https://justcause.readthedocs.io/en/latest/_downloads/e054f7a0fc9cf9e680173600cb4b4350/thesis-mfranz.pdf)|[Python](https://github.com/inovex/justcause)|For evaluation of heterogeneous treatment effect estimators on common reference as well as synthetic data.|-|
 |WhyNot|[Documentation](https://whynot.readthedocs.io/en/latest/)|[Python](https://github.com/zykls/whynot)|An experimental sandbox for causal inference and decision making in dynamics.|-|
