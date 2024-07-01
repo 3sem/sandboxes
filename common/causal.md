@@ -13,17 +13,17 @@
 ####  Another libs
 |Name|Paper/Documentation|Venue|Code|Comment|
 |---|---|---|---|---|
-|JustCause|[Underlying thesis](https://justcause.readthedocs.io/en/latest/_downloads/e054f7a0fc9cf9e680173600cb4b4350/thesis-mfranz.pdf)|NA|[Python](https://github.com/inovex/justcause)|For evaluation of heterogeneous treatment effect estimators on common reference as well as synthetic data.|
+|JustCause|[Underlying thesis](https://justcause.readthedocs.io/en/latest/_downloads/e054f7a0fc9cf9e680173600cb4b4350/thesis-mfranz.pdf)|-|[Python](https://github.com/inovex/justcause)|For evaluation of heterogeneous treatment effect estimators on common reference as well as synthetic data.|
 |WhyNot|[Documentation](https://whynot.readthedocs.io/en/latest/)|-|[Python](https://github.com/zykls/whynot)|An experimental sandbox for causal inference and decision making in dynamics.|
-|scikit-uplift|[Documentation](https://www.uplift-modeling.com/en/latest/index.html) and [User guide for uplift modeling](https://www.uplift-modeling.com/en/latest/user_guide/index.html)|NA|[Python](https://github.com/maks-sh/scikit-uplift)|Uplift modeling in scikit-learn style in python. |
+|scikit-uplift|[Documentation](https://www.uplift-modeling.com/en/latest/index.html) and [User guide for uplift modeling](https://www.uplift-modeling.com/en/latest/user_guide/index.html)|-|[Python](https://github.com/maks-sh/scikit-uplift)|Uplift modeling in scikit-learn style in python. |
 
 ### Causal Discovery
 |Name|Paper|Code|Comment|
 |---|---|---|---|
-|[causal-learn](https://causal-learn.readthedocs.io/en/latest/)|NA|[Python](https://github.com/cmu-phil/causal-learn)|Causal Discovery for Python. A translation and extension of TETRAD.|
-|Causaldag|NA|[Python](https://github.com/uhlerlab/causaldag)|Python package for the creation, manipulation, and learning of Causal DAGs|
-|CausalNex|NA|[Python](https://github.com/quantumblacklabs/causalnex)|A toolkit for causal reasoning with Bayesian Networks.|
-|*CausalDiscoveryToolbox|[Causal Discovery Toolbox: Uncover causal relationships in Python](https://arxiv.org/pdf/1903.02278)|[Python](https://github.com/Diviyan-Kalainathan/CausalDiscoveryToolbox)||
+|[causal-learn](https://causal-learn.readthedocs.io/en/latest/)|-|[Python](https://github.com/cmu-phil/causal-learn)|Causal Discovery for Python. A translation and extension of TETRAD.|
+|Causaldag|-|[Python](https://github.com/uhlerlab/causaldag)|Python package for the creation, manipulation, and learning of Causal DAGs|
+|CausalNex|-|[Python](https://github.com/quantumblacklabs/causalnex)|A toolkit for causal reasoning with Bayesian Networks.|
+|CDT|[Causal Discovery Toolbox: Uncover causal relationships in Python](https://arxiv.org/pdf/1903.02278)|[Python](https://github.com/Diviyan-Kalainathan/CausalDiscoveryToolbox)||
 
 
 
